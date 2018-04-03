@@ -27,14 +27,14 @@ Collapse levels
 
     instance.collapse(
     	2 /* collapse after two level */, 
-    	[0, 2] /* collapse only these siblings, if not provided collapse every siblings */
+    	['East','West'] /* collapse only these siblings, if not provided collapse every siblings */
     )
 
 Expand levels
 
     instance.expand(
     	2 /* expand level */, 
-    	[0, 2] /* collapse only these siblings, if not provided collapse every siblings */, 
+    	['East','West'] /* collapse only these siblings, if not provided collapse every siblings */, 
     	true /* if all the level after this level should be collapsed, default false */
     )
 
