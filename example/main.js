@@ -7,5 +7,9 @@ India,North
 East,Kolkata
 West,Pune
 West,Mumbai
-South,Bengaluru`);
+South,Bengaluru
+North,Delhi
+Delhi,Karol Bagh
+Pune,Khadakwasla
+Kolkata,Salt Lake`);
 instn.render();
