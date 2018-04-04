@@ -1,5 +1,5 @@
 let dagFn = dag('div');
-let instn = dagFn(`parent,name
+let instance = dagFn(`parent,name
 India,East
 India,West
 India,South
@@ -12,4 +12,4 @@ North,Delhi
 Delhi,Karol Bagh
 Pune,Khadakwasla
 Kolkata,Salt Lake`);
-instn.render();
+instance.render();
