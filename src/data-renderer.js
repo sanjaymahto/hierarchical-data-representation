@@ -1,19 +1,23 @@
 import * as d3 from 'd3';
 import { adgData, csvData, config } from './data-loader';
-import { divElement, margin, width, height } from './index';
+import { divElement, margin, width, height } from './tag-selector';
 
-class Instance {
+/**
+ *@description Class to render the DAG Graph.
+ * @class Graph
+ */
+class Graph {
   /**
-   * @description constructor defined for Instance class.
+   * @description constructor defined for Graph class.
    */
   constructor() {
-    this.root = '';
-    this.updatedData = '';
-    this.svg = '';
-    this.treemap = '';
-    this.data = '';
-    this.updatedResult = '';
-    this.updateNode = '';
+    this.root = ''; // To assign parent, children and height to tree
+    this.updatedData = ''; // To update the tree data when calling updateData function
+    this.svg = ''; // To pass the SVG element to all the other functions
+    this.treemap = ''; // declares a tree layout and assigns the size
+    this.data = ''; // passing the new CSV data to updateData function
+    this.updatedResult = ''; // to pass the updated result when calling updateData function
+    this.updateNode = ''; // To pass the updated Node
   }
   /**
    * @description Function to render the tree
@@ -32,7 +36,6 @@ class Instance {
     // append the svg object to the body of the page
     // appends a 'group' element to 'svg'
     // moves the 'group' element to the top left margin
-
     if (this.updatedData !== '' || this.updatedData !== undefined) {
       d3.selectAll('svg').remove();
     }
@@ -50,8 +53,6 @@ class Instance {
     this.root.y0 = height / 2;
     this.root.x0 = 0;
     const rootElement = this.root;
-    // console.log(rootElement);
-
 
     // declares a tree layout and assigns the size
     this.treemap = d3.tree()
@@ -71,14 +72,10 @@ class Instance {
       nodes.forEach((d) => { d.y = d.depth * 100; });
 
       // ****************** Nodes section *************************** //
-
-      /* eslint no-return-assign: 0 */
-      /* eslint no-multi-assign: 0 */
       // Update the nodes...
       const node = rendersvg.selectAll('g.node')
         .data(nodes, d => d.id || (d.id = i += 1));
 
-      /* eslint no-underscore-dangle: 0 */
       // Toggle children on click.
       function click(d) {
         // console.log('d in click:', d);
@@ -217,7 +214,7 @@ class Instance {
     this.updateNode(this.root);
   }
   /**
-   *@description function to  update the data.
+   *@description function to  update the data and recreating the tree.
    * @param  {} newData
    */
   updateData(newData) {
@@ -271,6 +268,7 @@ class Instance {
     const main = this;
     let countj = 0;
     /**
+     * @description function to collapse tree according to depth level.
      * @param  {} d
      */
     function collapseLevel(d) {
@@ -285,6 +283,7 @@ class Instance {
       main.updateNode(d);
     }
     /**
+     * @description function to collapse the tree based on siblingArray.
      * @param  {} d
      */
     function collapseLevelWithSibling(d) {
@@ -329,6 +328,7 @@ class Instance {
     const main = this;
     let countj = 0;
     /**
+     * @description function to expand tree according to depth level.
      * @param  {} d
      */
     function expandLevel(d) {
@@ -345,7 +345,6 @@ class Instance {
     /**
      * @param  {} d
      */
-
     function expandLevelWithSiblingsforfalse(d) {
       if (d._children && d.depth >= level) {
         d.children = d._children;
@@ -353,7 +352,9 @@ class Instance {
         d._children = null;
       }
     }
-
+    /**
+     * @param  {} d
+     */
     function expandLevelWithSiblings(d) {
       if (iscollapsed === true) {
         // console.log('d: ', d);
@@ -394,4 +395,4 @@ class Instance {
   }
 }
 
-export default new Instance();
+export default new Graph();
