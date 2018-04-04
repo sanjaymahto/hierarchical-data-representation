@@ -1,9 +1,17 @@
-import instance from './data-renderer';
+import graph from './data-renderer';
 
-/* eslint import/no-mutable-exports:0 */
 let adgData;
 let config;
 let csvData;
+/**
+ * @description Function to convert the CSV data to JSON tree structure.
+ * @param  {} data - take CSV data File
+ * @param  {null} conf={root - Configuration object to configure the tree color
+ * @param  {'#F7C7C5'} parentColor - parent node color
+ * @param  {'#FFE2C5'} childColor - child or leaf node color
+ * @param  {'#E9C9C9'} rootColor - root node color
+ * @param  {} }
+ */
 const loadData = (data, conf = {
   root: null, parentColor: '#F7C7C5', childColor: '#FFE2C5', rootColor: '#E9C9C9',
 }) => {
@@ -50,7 +58,7 @@ const loadData = (data, conf = {
       adgData.push(node);
     }
   });
-  return instance;
+  return graph;
 };
 
 export default loadData;
