@@ -1,7 +1,7 @@
 # hierarchical-data-representation
 
 ## Description
-Directed Acyclic Graph (DAG) to represent hierarchical data representation. 
+Hierarchical data representation using Directed Acyclic Graph (DAG). 
 
 
 ## API
