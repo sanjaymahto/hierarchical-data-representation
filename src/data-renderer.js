@@ -395,4 +395,3 @@ class Instance {
 }
 
 export default new Instance();
-
