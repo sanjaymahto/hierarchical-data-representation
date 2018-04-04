@@ -63,6 +63,8 @@ NPM
     1). Run `npm run build` command to run webpack to create a build.
     2). After creating the build Run `npm start` to start the server.
 ```
+## Result Image
+![alt_text](https://i.imgur.com/NJXmfnj.png)
 
 ## Built With
 
