@@ -76,24 +76,20 @@ class Graph {
       const node = rendersvg.selectAll('g.node')
         .data(nodes, d => d.id || (d.id = i += 1));
 
-      // Toggle children on click.
-      function click(d) {
-        // console.log('d in click:', d);
-        if (d.children) {
-          d._children = d.children;
-          d.children = null;
-        } else {
-          d.children = d._children;
-          d._children = null;
-        }
-        mainThis.updateNode(d);
-      }
-
       // Enter any new modes at the parent's previous position.
       const nodeEnter = node.enter().append('g')
         .attr('class', 'node')
         .attr('transform', () => `translate(${source.x0},${source.y0})`)
-        .on('click', click);
+        .on('click', (d) => {
+          if (d.children) {
+            d._children = d.children;
+            d.children = null;
+          } else {
+            d.children = d._children;
+            d._children = null;
+          }
+          mainThis.updateNode(d);
+        });
 
       // Add Circle for the nodes
       nodeEnter.append('circle')
@@ -279,7 +275,6 @@ class Graph {
       } else if (d.children) {
         d.children.forEach(collapseLevel);
       }
-      // console.log('d: ', d);
       main.updateNode(d);
     }
     /**
@@ -304,17 +299,13 @@ class Graph {
 
     if (siblingArray === undefined || siblingArray === null || siblingArray === '') {
       if (level === 0) {
-        // console.log(this.root);
         collapseLevel(this.root);
       } else {
-        // console.log(this.root);
         this.root.children.forEach(collapseLevel);
       }
     } else if (level === 0) {
-      // console.log(this.root);
       collapseLevel(this.root);
     } else {
-      // console.log(this.root);
       this.root.children.forEach(collapseLevelWithSibling);
     }
   }
@@ -332,7 +323,6 @@ class Graph {
      * @param  {} d
      */
     function expandLevel(d) {
-      // console.log('d before:', d);
       if (d._children && d.depth >= level) {
         d.children = d._children;
         d.children.forEach(expandLevel);
@@ -357,7 +347,6 @@ class Graph {
      */
     function expandLevelWithSiblings(d) {
       if (iscollapsed === true) {
-        // console.log('d: ', d);
         if (d._children && d.depth === level) {
           if (siblingArray[countj] === d.data.name) {
             countj += 1;
