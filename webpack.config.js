@@ -6,8 +6,12 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'build'),
-    publicPath: '/assets/',
+    publicPath: '/dist/',
     filename: 'bundle.js',
+  },
+  devServer: {
+    inline: true,
+    contentBase: './example',
   },
   module: {
     rules: [
