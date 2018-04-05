@@ -1,11 +1,14 @@
 import * as d3 from 'd3';
-import { adgData, csvData, config } from './data-loader';
+import { adgData, csvData } from './data-loader';
 import { divElement, margin, width, height } from './tag-selector';
+import updateNode from './update-node';
+import { collapseLevel, collapseLevelWithSibling, expandLevel, expandLevelWithSiblings, convertvalueToDefault } from './collapse-expand-tree';
 
 /**
  *@description Class to render the DAG Graph.
  * @class Graph
  */
+let root;
 class Graph {
   /**
    * @description constructor defined for Graph class.
@@ -17,29 +20,24 @@ class Graph {
     this.treemap = ''; // declares a tree layout and assigns the size
     this.data = ''; // passing the new CSV data to updateData function
     this.updatedResult = ''; // to pass the updated result when calling updateData function
-    this.updateNode = ''; // To pass the updated Node
   }
   /**
    * @description Function to render the tree
    */
   render() {
     let treeData;
-    const mainThis = this;
+    // const mainThis = this;
     if (this.updatedData === '' || this.updatedData === undefined) {
       treeData = adgData.slice();
     } else {
       treeData = this.updatedData;
     }
-    let i = 0;
-    const duration = 550;
 
-    // append the svg object to the body of the page
-    // appends a 'group' element to 'svg'
-    // moves the 'group' element to the top left margin
     if (this.updatedData !== '' || this.updatedData !== undefined) {
       d3.selectAll('svg').remove();
     }
 
+    // append the svg object to the body of the page
     this.svg = d3.select(divElement).append('svg')
       .attr('width', width + margin.right + margin.left)
       .attr('height', height + margin.top + margin.bottom)
@@ -53,6 +51,7 @@ class Graph {
     this.root.y0 = height / 2;
     this.root.x0 = 0;
     const rootElement = this.root;
+    root = this.root;
 
     // declares a tree layout and assigns the size
     this.treemap = d3.tree()
@@ -60,154 +59,8 @@ class Graph {
       .separation((a, b) => (a.parent === b.parent ? 2 : 3));
     const renderTreemap = this.treemap;
 
-    this.updateNode = (source) => {
-      // Assigns the x and y position for the nodes
-      treeData = renderTreemap(rootElement);
-
-      // Compute the new tree layout.
-      const nodes = treeData.descendants();
-      const links = treeData.descendants().slice(1);
-
-      // Normalize for fixed-depth.
-      nodes.forEach((d) => { d.y = d.depth * 100; });
-
-      // ****************** Nodes section *************************** //
-      // Update the nodes...
-      const node = rendersvg.selectAll('g.node')
-        .data(nodes, d => d.id || (d.id = i += 1));
-
-      // Enter any new modes at the parent's previous position.
-      const nodeEnter = node.enter().append('g')
-        .attr('class', 'node')
-        .attr('transform', () => `translate(${source.x0},${source.y0})`)
-        .on('click', (d) => {
-          if (d.children) {
-            d._children = d.children;
-            d.children = null;
-          } else {
-            d.children = d._children;
-            d._children = null;
-          }
-          mainThis.updateNode(d);
-        });
-
-      // Add Circle for the nodes
-      nodeEnter.append('circle')
-        .attr('class', 'node')
-        .attr('r', 30)
-        .style('fill', (d) => {
-          if (d.parent === undefined || d.parent === null || d.parent === 'null') {
-            return config.rootColor;
-          }
-          if (d._children === undefined || d._children === null || d._children === '') {
-            return config.childColor;
-          }
-
-          return config.parentColor;
-        });
-
-
-      // Add labels for the nodes
-      nodeEnter.append('text')
-        .attr('dy', '.35em')
-        .attr('x', d => (d.children || d._children ? -0 : 0))
-        .attr('text-anchor', d => (d.children || d._children ? 'end' : 'start'))
-        .text(d => d.data.name)
-        .attr('text-anchor', 'middle')
-        .style('fill-opacity', 1);
-
-
-      // UPDATE
-      const nodeUpdate = nodeEnter.merge(node);
-
-      // Transition to the proper position for the node
-      nodeUpdate.transition()
-        .duration(duration)
-        .attr('transform', d => `translate(${d.x},${d.y})`);
-
-      // Update the node attributes and style
-      nodeUpdate.select('circle.node')
-        .attr('r', 30)
-        .style('fill', (d) => {
-          if (d.parent === undefined || d.parent === null || d.parent === 'null') {
-            return config.rootColor;
-          }
-          if (d._children === undefined || d._children === null || d._children === '') {
-            return config.childColor;
-          }
-
-          return config.parentColor;
-        })
-        .attr('cursor', 'pointer');
-
-
-      // Remove any exiting nodes
-      const nodeExit = node.exit()
-        .remove();
-
-      // On exit reduce the node circles size to 0
-      nodeExit.select('circle')
-        .attr('r', 30)
-        .style('fill', (d) => {
-          if (d.parent === undefined || d.parent === null || d.parent === 'null') {
-            return config.rootColor;
-          }
-          if (d._children === undefined || d._children === null || d._children === '') {
-            return config.childColor;
-          }
-
-          return config.parentColor;
-        });
-
-
-      // On exit reduce the opacity of text labels
-      nodeExit.select('text')
-        .style('fill-opacity', 1);
-
-      // ****************** links section ***************************
-
-      // Update the links...
-      const link = rendersvg.selectAll('path.link')
-        .data(links, d => d.id);
-
-
-      // Creates a curved (diagonal) path from parent to the child nodes
-      function diagonal(s, d) {
-        const path = `M ${s.x} ${s.y}
-      C ${(s.x + d.x) / 2} ${s.y},
-        ${(s.x + d.x) / 2} ${d.y},
-        ${d.x} ${d.y}`;
-
-        return path;
-      }
-
-      // Enter any new links at the parent's previous position.
-      const linkEnter = link.enter().insert('path', 'g')
-        .attr('class', 'link')
-        .attr('d', () => {
-          const o = { x: source.x0, y: source.y0 };
-          return diagonal(o, o);
-        });
-
-      // UPDATE
-      const linkUpdate = linkEnter.merge(link);
-
-      // Transition back to the parent element position
-      linkUpdate.transition()
-        .duration(duration)
-        .attr('d', d => diagonal(d, d.parent));
-
-      // Remove any exiting links
-      link.exit()
-        .remove();
-
-      // Store the old positions for transition.
-      nodes.forEach((d) => {
-        d.x0 = d.x;
-        d.y0 = d.y;
-      });
-    };
-    this.updateNode(this.root);
+    // to update the node
+    updateNode(rendersvg, rootElement, renderTreemap);
   }
   /**
    *@description function to  update the data and recreating the tree.
@@ -261,52 +114,30 @@ class Graph {
    * @param  {} siblingArray
    */
   collapse(level, siblingArray) {
-    const main = this;
-    let countj = 0;
-    /**
-     * @description function to collapse tree according to depth level.
-     * @param  {} d
-     */
-    function collapseLevel(d) {
-      if (d.children && d.depth >= level) {
-        d._children = d.children;
-        d._children.forEach(collapseLevel);
-        d.children = null;
-      } else if (d.children) {
-        d.children.forEach(collapseLevel);
-      }
-      main.updateNode(d);
-    }
-    /**
-     * @description function to collapse the tree based on siblingArray.
-     * @param  {} d
-     */
-    function collapseLevelWithSibling(d) {
-      if (d.children && d.depth === level) {
-        if (siblingArray[countj] === d.data.name) {
-          countj += 1;
-          d._children = d.children;
-          d._children.forEach(collapseLevelWithSibling);
-          d.children = null;
-        } else {
-          d.children.forEach(collapseLevelWithSibling);
-        }
-      } else if (d.children) {
-        d.children.forEach(collapseLevelWithSibling);
-      }
-      main.updateNode(d);
-    }
+    const csvg = this.svg;
+    const ctreemap = this.treemap;
+    let cd;
 
     if (siblingArray === undefined || siblingArray === null || siblingArray === '') {
       if (level === 0) {
-        collapseLevel(this.root);
+        cd = collapseLevel(this.root, level);
+        updateNode(csvg, cd, ctreemap);
       } else {
-        this.root.children.forEach(collapseLevel);
+        this.root.children.forEach((d2) => {
+          cd = collapseLevel(d2, level);
+          updateNode(csvg, cd, ctreemap);
+        });
+        convertvalueToDefault();
       }
     } else if (level === 0) {
-      collapseLevel(this.root);
+      cd = collapseLevel(this.root, level);
+      updateNode(csvg, cd, ctreemap);
     } else {
-      this.root.children.forEach(collapseLevelWithSibling);
+      this.root.children.forEach((d2) => {
+        cd = collapseLevelWithSibling(d2, level, siblingArray);
+        updateNode(csvg, cd, ctreemap);
+      });
+      convertvalueToDefault();
     }
   }
   /**
@@ -316,72 +147,33 @@ class Graph {
    * @param  {} iscollapsed=false
    */
   expand(level, siblingArray, iscollapsed = false) {
-    const main = this;
-    let countj = 0;
-    /**
-     * @description function to expand tree according to depth level.
-     * @param  {} d
-     */
-    function expandLevel(d) {
-      if (d._children && d.depth >= level) {
-        d.children = d._children;
-        d.children.forEach(expandLevel);
-        d._children = null;
-      } else if (d.children) {
-        d.children.forEach(expandLevel);
-      }
-      main.updateNode(d);
-    }
-    /**
-     * @param  {} d
-     */
-    function expandLevelWithSiblingsforfalse(d) {
-      if (d._children && d.depth >= level) {
-        d.children = d._children;
-        d.children.forEach(expandLevelWithSiblingsforfalse);
-        d._children = null;
-      }
-    }
-    /**
-     * @param  {} d
-     */
-    function expandLevelWithSiblings(d) {
-      if (iscollapsed === true) {
-        if (d._children && d.depth === level) {
-          if (siblingArray[countj] === d.data.name) {
-            countj += 1;
-            d.children = d._children;
-            d.children.forEach(expandLevelWithSiblings);
-            d._children = null;
-          } else if (d.children) { d.children.forEach(expandLevelWithSiblings); }
-        } else if (d.children) {
-          d.children.forEach(expandLevelWithSiblings);
-        }
-      } else if (d._children && d.depth >= level) {
-        if (siblingArray[countj] === d.data.name) {
-          countj += 1;
-          d.children = d._children;
-          d.children.forEach(expandLevelWithSiblingsforfalse);
-          d._children = null;
-        } else if (d.children) { d.children.forEach(expandLevelWithSiblings); }
-      } else if (d.children) {
-        d.children.forEach(expandLevelWithSiblings);
-      }
-      main.updateNode(d);
-    }
-
+    // const main = this;
+    const esvg = this.svg;
+    const etreemap = this.treemap;
+    let ed;
     if (siblingArray === undefined || siblingArray === null || siblingArray === '') {
       if (level === 0) {
-        expandLevel(this.root);
+        ed = expandLevel(this.root, level);
+        updateNode(esvg, ed, etreemap);
       } else {
-        this.root.children.forEach(expandLevel);
+        this.root.children.forEach((e2) => {
+          ed = expandLevel(e2, level);
+          updateNode(esvg, ed, etreemap);
+        });
+        convertvalueToDefault();
       }
     } else if (level === 0) {
-      expandLevel(this.root);
+      ed = expandLevel(this.root, level);
+      updateNode(esvg, ed, etreemap);
     } else {
-      this.root.children.forEach(expandLevelWithSiblings);
+      this.root.children.forEach((e2) => {
+        ed = expandLevelWithSiblings(e2, level, siblingArray, iscollapsed);
+        updateNode(esvg, ed, etreemap);
+      });
+      convertvalueToDefault();
     }
   }
 }
 
 export default new Graph();
+export { root };
