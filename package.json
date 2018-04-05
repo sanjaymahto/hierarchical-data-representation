@@ -4,7 +4,7 @@
   "description": "Hierarcial Data representation of CSV data.",
   "main": "index.js",
   "scripts": {
-    "test": "webpack -w --progress --colors --config webpack-test.config.js",
+    "test": "echo \"error: No test specified\" && exit1",
     "build": "webpack",
     "lint": "eslint ./src",
     "start": "webpack-dev-server"
