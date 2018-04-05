@@ -7,14 +7,17 @@ let divElement;
 let margin;
 let width;
 let height;
-const dag = (mount = 'body') => {
+const dag = (mount = 'body', elemMargin = {
+  top: 20, right: 90, bottom: 30, left: 90,
+}, elemWidth = 960, elemHeight = 500) => {
   divElement = mount;
+
   // Set the dimensions and margins of the diagram
   margin = {
-    top: 20, right: 90, bottom: 30, left: 90,
+    top: elemMargin.top, right: elemMargin.right, bottom: elemMargin.bottom, left: elemMargin.left,
   };
-  width = 960 - margin.left - margin.right;
-  height = 500 - margin.top - margin.bottom;
+  width = elemWidth - margin.left - margin.right;
+  height = elemHeight - margin.top - margin.bottom;
 
   return loadData;
 };
