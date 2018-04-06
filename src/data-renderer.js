@@ -114,28 +114,29 @@ class Graph {
    * @param  {} siblingArray
    */
   collapse(level, siblingArray) {
-    const csvg = this.svg;
-    const ctreemap = this.treemap;
+    // const csvg = this.svg;
+    // const ctreemap = this.treemap;
+    const { svg, treemap } = this;
     let cd;
 
     if (siblingArray === undefined || siblingArray === null || siblingArray === '') {
       if (level === 0) {
         cd = collapseLevel(this.root, level);
-        updateNode(csvg, cd, ctreemap, nodeSize);
+        updateNode(svg, cd, treemap, nodeSize);
       } else {
         this.root.children.forEach((d2) => {
           cd = collapseLevel(d2, level);
-          updateNode(csvg, cd, ctreemap, nodeSize);
+          updateNode(svg, cd, treemap, nodeSize);
         });
         convertvalueToDefault();
       }
     } else if (level === 0) {
       cd = collapseLevel(this.root, level);
-      updateNode(csvg, cd, ctreemap, nodeSize);
+      updateNode(svg, cd, treemap, nodeSize);
     } else {
       this.root.children.forEach((d2) => {
         cd = collapseLevelWithSibling(d2, level, siblingArray);
-        updateNode(csvg, cd, ctreemap, nodeSize);
+        updateNode(svg, cd, treemap, nodeSize);
       });
       convertvalueToDefault();
     }
@@ -147,27 +148,28 @@ class Graph {
    * @param  {} iscollapsed=false
    */
   expand(level, siblingArray, iscollapsed = false) {
-    const esvg = this.svg;
-    const etreemap = this.treemap;
+    // const esvg = this.svg;
+    // const etreemap = this.treemap;
+    const { svg, treemap } = this;
     let ed;
     if (siblingArray === undefined || siblingArray === null || siblingArray === '') {
       if (level === 0) {
         ed = expandLevel(this.root, level);
-        updateNode(esvg, ed, etreemap, nodeSize);
+        updateNode(svg, ed, treemap, nodeSize);
       } else {
         this.root.children.forEach((e2) => {
           ed = expandLevel(e2, level);
-          updateNode(esvg, ed, etreemap, nodeSize);
+          updateNode(svg, ed, treemap, nodeSize);
         });
         convertvalueToDefault();
       }
     } else if (level === 0) {
       ed = expandLevel(this.root, level);
-      updateNode(esvg, ed, etreemap, nodeSize);
+      updateNode(svg, ed, treemap, nodeSize);
     } else {
       this.root.children.forEach((e2) => {
         ed = expandLevelWithSiblings(e2, level, siblingArray, iscollapsed);
-        updateNode(esvg, ed, etreemap, nodeSize);
+        updateNode(svg, ed, treemap, nodeSize);
       });
       convertvalueToDefault();
     }
