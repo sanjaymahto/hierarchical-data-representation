@@ -3,6 +3,7 @@
 /node_modules/
 /build/
 /Unit-tests-Result/
+/dist/
 
 # ignore files
 .vscode
