@@ -7,7 +7,8 @@ module.exports = {
         "no-underscore-dangle": 0,
         "prefer-const": 0,
         "prefer-destructuring": 0,
-        "max-len": 0
+        "max-len": 0,
+        "eslint-disable no-unused-expressions" : 0
     },
     "env": {
         "browser": true,

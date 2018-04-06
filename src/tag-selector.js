@@ -7,9 +7,10 @@ let divElement;
 let margin;
 let width;
 let height;
+let nodeSize;
 const dag = (mount = 'body', elemMargin = {
-  top: 20, right: 90, bottom: 30, left: 90,
-}, elemWidth = 960, elemHeight = 500) => {
+  top: 50, right: 90, bottom: 30, left: 500,
+}, elemWidth = 960, elemHeight = 500, elemNodeSize = 30) => {
   divElement = mount;
 
   // Set the dimensions and margins of the diagram
@@ -18,9 +19,9 @@ const dag = (mount = 'body', elemMargin = {
   };
   width = elemWidth - margin.left - margin.right;
   height = elemHeight - margin.top - margin.bottom;
-
+  nodeSize = elemNodeSize;
   return loadData;
 };
 
 window.dag = dag;
-export { divElement, margin, width, height, dag };
+export { divElement, margin, width, height, nodeSize, dag };

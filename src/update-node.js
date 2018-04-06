@@ -1,12 +1,26 @@
 import { config } from './data-loader';
 import { root } from './data-renderer';
+
+/**
+ * @description Creates a curved (diagonal) path from parent to the child nodes
+ * @param  {} s
+ * @param  {} d
+ */
+function diagonal(s, d) {
+  const path = `M ${s.x} ${s.y}
+  C ${(s.x + d.x) / 2} ${s.y},
+    ${(s.x + d.x) / 2} ${d.y},
+    ${d.x} ${d.y}`;
+  return path;
+}
 /**
  * @description function to update the tree nodes.
- * @param  {} rendersvg
- * @param  {} rootElement
- * @param  {} renderTreemap
+ * @param  {} rendersvg // Svg tag
+ * @param  {} rootElement // tree data or node Data
+ * @param  {} renderTreemap // tree layout based on tree data or node data
+ * @param  {} nodeSize // node size
  */
-export default function updateNode(rendersvg, rootElement, renderTreemap) {
+export default function updateNode(rendersvg, rootElement, renderTreemap, nodeSize) {
   let i = 0;
   let treeData;
   const duration = 550;
@@ -20,14 +34,14 @@ export default function updateNode(rendersvg, rootElement, renderTreemap) {
   const links = treeData.descendants().slice(1);
 
   // Normalize for fixed-depth.
-  nodes.forEach((d) => { d.y = d.depth * 100; });
+  nodes.forEach((d) => { d.y = d.depth * 90; });
 
   // ****************** Nodes section *************************** //
   // Update the nodes...
   const node = rendersvg.selectAll('g.node')
     .data(nodes, d => d.id || (d.id = i += 1));
 
-    // Enter any new modes at the parent's previous position.
+    // Enter any new nodes at the parent's previous position.
   const nodeEnter = node.enter().append('g')
     .attr('class', 'node')
     .attr('transform', () => `translate(${source.x0},${source.y0})`)
@@ -39,13 +53,13 @@ export default function updateNode(rendersvg, rootElement, renderTreemap) {
         d.children = d._children;
         d._children = null;
       }
-      updateNode(rendersvg, d, renderTreemap);
+      updateNode(rendersvg, d, renderTreemap, nodeSize);
     });
 
     // Add Circle for the nodes
   nodeEnter.append('circle')
     .attr('class', 'node')
-    .attr('r', 30)
+    .attr('r', nodeSize)
     .style('fill', (d) => {
       if (d.parent === undefined || d.parent === null || d.parent === 'null') {
         return config.rootColor;
@@ -53,7 +67,6 @@ export default function updateNode(rendersvg, rootElement, renderTreemap) {
       if (d._children === undefined || d._children === null || d._children === '') {
         return config.childColor;
       }
-
       return config.parentColor;
     });
 
@@ -78,7 +91,7 @@ export default function updateNode(rendersvg, rootElement, renderTreemap) {
 
   // Update the node attributes and style
   nodeUpdate.select('circle.node')
-    .attr('r', 30)
+    .attr('r', nodeSize)
     .style('fill', (d) => {
       if (d.parent === undefined || d.parent === null || d.parent === 'null') {
         return config.rootColor;
@@ -86,51 +99,20 @@ export default function updateNode(rendersvg, rootElement, renderTreemap) {
       if (d._children === undefined || d._children === null || d._children === '') {
         return config.childColor;
       }
-
       return config.parentColor;
     })
     .attr('cursor', 'pointer');
 
 
   // Remove any exiting nodes
-  const nodeExit = node.exit()
+  node.exit()
     .remove();
-
-    // On exit reduce the node circles size to 0
-  nodeExit.select('circle')
-    .attr('r', 30)
-    .style('fill', (d) => {
-      if (d.parent === undefined || d.parent === null || d.parent === 'null') {
-        return config.rootColor;
-      }
-      if (d._children === undefined || d._children === null || d._children === '') {
-        return config.childColor;
-      }
-
-      return config.parentColor;
-    });
-
-
-  // On exit reduce the opacity of text labels
-  nodeExit.select('text')
-    .style('fill-opacity', 1);
 
   // ****************** links section ***************************
 
   // Update the links...
   const link = rendersvg.selectAll('path.link')
     .data(links, d => d.id);
-
-
-    // Creates a curved (diagonal) path from parent to the child nodes
-  function diagonal(s, d) {
-    const path = `M ${s.x} ${s.y}
-    C ${(s.x + d.x) / 2} ${s.y},
-      ${(s.x + d.x) / 2} ${d.y},
-      ${d.x} ${d.y}`;
-
-    return path;
-  }
 
   // Enter any new links at the parent's previous position.
   const linkEnter = link.enter().insert('path', 'g')
