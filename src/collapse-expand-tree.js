@@ -2,7 +2,8 @@ let countc = 0;
 let counte = 0;
 /**
  * @description function to collapse tree according to depth level.
- * @param  {} d
+ * @param  {} d //tree Data or node Data
+ * @param  {} level //depth level of tree
  */
 let collapseLevel = (d, level) => {
   if (d.children && d.depth >= level) {
@@ -16,8 +17,10 @@ let collapseLevel = (d, level) => {
 };
 /**
 * @description function to collapse the tree based on siblingArray.
-* @param  {} d
-*/
+ * @param  {} d //tree data or node data
+ * @param  {} level // depth level of tree
+ * @param  {} siblingArray // array of names of child of that levels parent to  collapse
+ */
 let collapseLevelWithSibling = (d, level, siblingArray) => {
   if (d.children && d.depth === level) {
     if (siblingArray[countc] === d.data.name) {
@@ -35,8 +38,9 @@ let collapseLevelWithSibling = (d, level, siblingArray) => {
 };
 /**
 * @description function to expand tree according to depth level.
-* @param  {} d
-*/
+ * @param  {} d // tree data or node data
+ * @param  {} level //depth level of tree
+ */
 let expandLevel = (d, level) => {
   if (d._children && d.depth >= level) {
     d.children = d._children;
@@ -48,18 +52,12 @@ let expandLevel = (d, level) => {
   return d;
 };
 /**
-* @param  {} d
-*/
-let expandLevelWithSiblingsforfalse = (d, level) => {
-  if (d._children && d.depth >= level) {
-    d.children = d._children;
-    d.children.forEach(expandLevelWithSiblingsforfalse);
-    d._children = null;
-  }
-};
-/**
-* @param  {} d
-*/
+ * @description function to expand tree based on siblingArray.
+ * @param  {} d //tree data or node data
+ * @param  {} level // depth level of tree
+ * @param  {} siblingArray // array of names of child of that levels parent to expand
+ * @param  {} iscollapsed // boolen to decide if all the childs of selected parent to expand or not.
+ */
 let expandLevelWithSiblings = (d, level, siblingArray, iscollapsed) => {
   if (iscollapsed === true) {
     if (d._children && d.depth === level) {
@@ -76,7 +74,7 @@ let expandLevelWithSiblings = (d, level, siblingArray, iscollapsed) => {
     if (siblingArray[counte] === d.data.name) {
       counte += 1;
       d.children = d._children;
-      d.children.forEach(expandLevelWithSiblingsforfalse, level);
+      d.children.forEach(expandLevel, level);
       d._children = null;
     } else if (d.children) { d.children.forEach(expandLevelWithSiblings); }
   } else if (d.children) {
