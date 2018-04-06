@@ -34,7 +34,7 @@ export default function updateNode(rendersvg, rootElement, renderTreemap, nodeSi
   const links = treeData.descendants().slice(1);
 
   // Normalize for fixed-depth.
-  nodes.forEach((d) => { d.y = d.depth * 100; });
+  nodes.forEach((d) => { d.y = d.depth * 90; });
 
   // ****************** Nodes section *************************** //
   // Update the nodes...
