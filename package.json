@@ -13,7 +13,8 @@
     "Hierarchial-data-representation",
     "Canvas",
     "SVG",
-    "d3"
+    "d3",
+    "unit-test"
   ],
   "dependencies": {
     "d3": "^5.0.0"

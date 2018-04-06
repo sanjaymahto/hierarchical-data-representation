@@ -1,7 +1,7 @@
 module.exports = {
     "rules": {
         "no-param-reassign": 0,
-        "import/no-mutable-exports":0,
+        "import/no-mutable-exports": 0,
         "no-return-assign": 0, 
         "no-multi-assign": 0,
         "no-underscore-dangle": 0,
