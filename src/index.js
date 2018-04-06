@@ -1,3 +1,3 @@
 import dag from './tag-selector';
 
-export default dag;
+export { dag as default };
