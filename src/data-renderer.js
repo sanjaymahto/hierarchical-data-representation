@@ -25,13 +25,7 @@ class Graph {
    */
   render() {
     let treeData;
-    if (this.updatedData === '') {
-      treeData = adgData.slice();
-    } else {
-      d3.selectAll('svg').remove();
-      treeData = this.updatedData;
-    }
-
+    treeData = adgData.slice();
     // append the svg object to the body of the page
     this.svg = d3.select(divElement).append('svg')
       .attr('width', width + margin.right + margin.left)
@@ -101,7 +95,18 @@ class Graph {
       }
     });
 
-    this.render();
+    // recreating the tree and Assigning parent, children, height, depth
+    this.root = d3.hierarchy(this.updatedData[0], d => d.children);
+    this.root.y0 = height / 2;
+    this.root.x0 = 0;
+    const rootElement = this.root;
+    root = this.root;
+
+    // to update the node
+    updateNode(this.svg, rootElement, this.treemap, nodeSize);
+    this.collapse(0); // functions to collapse the tree
+    this.expand(0); // function to expand the tree
+    // this.render();
   }
   /**
    * @description function to collapse the tree node.
