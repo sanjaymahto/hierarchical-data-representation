@@ -114,8 +114,6 @@ class Graph {
    * @param  {} siblingArray
    */
   collapse(level, siblingArray) {
-    // const csvg = this.svg;
-    // const ctreemap = this.treemap;
     const { svg, treemap } = this;
     let cd;
 
@@ -148,8 +146,6 @@ class Graph {
    * @param  {} iscollapsed=false
    */
   expand(level, siblingArray, iscollapsed = false) {
-    // const esvg = this.svg;
-    // const etreemap = this.treemap;
     const { svg, treemap } = this;
     let ed;
     if (siblingArray === undefined || siblingArray === null || siblingArray === '') {
