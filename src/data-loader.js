@@ -34,7 +34,7 @@ const loadData = (data, conf = {
     result.push({ parent: null, name: conf.root });
   }
 
-  csvData = result.slice();
+  csvData = [...result];
 
   // *********** Convert flat data into a nice tree *************** //
   // create a name: node map
