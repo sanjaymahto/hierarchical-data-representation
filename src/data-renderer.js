@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { adgData, csvData } from './data-loader';
-import { divElement, margin, width, height, nodeSize } from './tag-selector';
+import { divElement, margin, width, height, nodeSize } from './dag';
 import updateNode from './update-node';
 import { collapseLevel, collapseLevelWithSibling, expandLevel, expandLevelWithSiblings, convertvalueToDefault } from './collapse-expand-tree';
 
