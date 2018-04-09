@@ -2,6 +2,7 @@
 # ignore node modules
 /node_modules/
 /build/
+/Unit-tests-Results/
 
 # ignore files
 .vscode
