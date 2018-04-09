@@ -25,7 +25,7 @@ class Graph {
    */
   render() {
     let treeData;
-    treeData = adgData.slice();
+    treeData = [...adgData];
     // append the svg object to the body of the page
     this.svg = d3.select(divElement).append('svg')
       .attr('width', width + margin.right + margin.left)
@@ -57,7 +57,7 @@ class Graph {
    */
   updateData(newData) {
     if (this.updatedResult === '' || this.updatedResult === undefined) {
-      this.updatedResult = csvData.slice();
+      this.updatedResult = [...csvData];
     }
     const lines = newData.split('\n');
     const headers = lines[0].split(',');
