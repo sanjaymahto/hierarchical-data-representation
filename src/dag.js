@@ -23,5 +23,5 @@ const dag = (mount = 'body', elemMargin = {
   return loadData;
 };
 
-window.dag = dag;
-export { divElement, margin, width, height, nodeSize, dag };
+export { dag as default };
+export { divElement, margin, width, height, nodeSize };

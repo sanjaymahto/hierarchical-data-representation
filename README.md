@@ -3,7 +3,6 @@
 ## Description
 Hierarchical data representation using Directed Acyclic Graph (DAG). 
 
-
 ## API
 
 Create an instance
@@ -66,8 +65,3 @@ NPM
 ## Result Image
 ![alt_text](https://i.imgur.com/NJXmfnj.png)
 
-## Built With
-
-OS: Mac OS
-
-Editor: VS Code

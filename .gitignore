@@ -2,9 +2,8 @@
 # ignore node modules
 /node_modules/
 /build/
-/Unit-tests-Result/
+/Unit-tests-Results/
 /dist/
-
 # ignore files
 .vscode
 .DS_Store
