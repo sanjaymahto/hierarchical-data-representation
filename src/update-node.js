@@ -1,5 +1,4 @@
 import { config } from './data-loader';
-import { root } from './data-renderer';
 
 /**
  * @description Creates a curved (diagonal) path from parent to the child nodes
@@ -20,7 +19,7 @@ function diagonal(s, d) {
  * @param  {} renderTreemap // tree layout based on tree data or node data
  * @param  {} nodeSize // node size
  */
-export default function updateNode(rendersvg, rootElement, renderTreemap, nodeSize) {
+export default function updateNode(rendersvg, root, rootElement, renderTreemap, nodeSize) {
   let i = 0;
   let treeData;
   const duration = 550;
@@ -46,14 +45,16 @@ export default function updateNode(rendersvg, rootElement, renderTreemap, nodeSi
     .attr('class', 'node')
     .attr('transform', () => `translate(${source.x0},${source.y0})`)
     .on('click', (d) => {
-      if (d.children) {
-        d._children = d.children;
-        d.children = null;
-      } else {
-        d.children = d._children;
-        d._children = null;
+      if (d.depth !== 0) {
+        if (d.children) {
+          d._children = d.children;
+          d.children = null;
+        } else {
+          d.children = d._children;
+          d._children = null;
+        }
+        updateNode(rendersvg, root, d, renderTreemap, nodeSize);
       }
-      updateNode(rendersvg, d, renderTreemap, nodeSize);
     });
 
     // Add Circle for the nodes
