@@ -1,4 +1,5 @@
 /* global describe, it */
+/* eslint-disable no-unused-expressions */
 
 import { expect } from 'chai';
 import loadData, { config, adgData, csvData } from './data-loader';
@@ -30,5 +31,7 @@ describe('Checking loadData file functions', () => {
     });
     expect(adgData).not.to.be.a('undefined');
     expect(csvData).not.to.be.a('undefined');
+    expect(csvData).to.be.a('array');
+    expect(adgData).to.be.a('array');
   });
 });

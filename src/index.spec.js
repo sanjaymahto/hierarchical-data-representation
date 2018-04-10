@@ -1,10 +1,10 @@
 /* global describe, it */
-/* eslint-disable no-unused-expressions */
 
 import { expect } from 'chai';
+import dag from './dag';
 
-describe('index file test case', () => {
-  it('sample ', () => {
-    expect(true).to.be.true;
+describe('index file unit-test case', () => {
+  it('Checking return value of dag function ', () => {
+    expect(dag()).to.be.a('function');
   });
 });

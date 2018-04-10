@@ -1,7 +1,7 @@
 /* global describe, it */
 
 import { expect } from 'chai';
-import { divElement, margin, width, height, nodeSize, dag } from './tag-selector';
+import dag, { divElement, margin, width, height, nodeSize } from './dag';
 
 describe('Checking tag-selector file functions', () => {
   it('Elements values before Initialisation of dag Function', () => {
