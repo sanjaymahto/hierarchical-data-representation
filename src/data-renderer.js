@@ -8,7 +8,6 @@ import { collapseLevel, collapseLevelWithSibling, expandLevel, expandLevelWithSi
  *@description Class to render the DAG Graph.
  * @class Graph
  */
-let root;
 class Graph {
   /**
    * @description constructor defined for Graph class.
@@ -40,7 +39,6 @@ class Graph {
     this.root.y0 = height / 2;
     this.root.x0 = 0;
     const rootElement = this.root;
-    root = this.root;
 
     // declares a tree layout and assigns the size
     this.treemap = d3.tree()
@@ -49,7 +47,7 @@ class Graph {
     const renderTreemap = this.treemap;
 
     // to update the node
-    updateNode(rendersvg, rootElement, renderTreemap, nodeSize);
+    updateNode(rendersvg, this.root, rootElement, renderTreemap, nodeSize);
   }
   /**
    *@description function to  update the data and recreating the tree.
@@ -59,15 +57,21 @@ class Graph {
     if (this.updatedResult === '' || this.updatedResult === undefined) {
       this.updatedResult = [...csvData];
     }
-    const lines = newData.split('\n');
-    const headers = lines[0].split(',');
-    for (let i = 1; i < lines.length; i += 1) {
-      const obj = {};
-      const currentline = lines[i].split(',');
-      for (let j = 0; j < headers.length; j += 1) {
-        obj[headers[j]] = currentline[j];
+    if (typeof (newData) === 'string') {
+      const lines = newData.split('\n');
+      const headers = lines[0].split(',');
+      for (let i = 1; i < lines.length; i += 1) {
+        const obj = {};
+        const currentline = lines[i].split(',');
+        for (let j = 0; j < headers.length; j += 1) {
+          obj[headers[j]] = currentline[j];
+        }
+        this.updatedResult.push(obj);
       }
-      this.updatedResult.push(obj);
+    } else {
+      newData.forEach((element) => {
+        this.updatedResult.push(element);
+      });
     }
 
     this.updatedResult.forEach((v) => { delete v.children; });
@@ -100,10 +104,9 @@ class Graph {
     this.root.y0 = height / 2;
     this.root.x0 = 0;
     const rootElement = this.root;
-    root = this.root;
 
     // to update the node
-    updateNode(this.svg, rootElement, this.treemap, nodeSize);
+    updateNode(this.svg, this.root, rootElement, this.treemap, nodeSize);
     this.collapse(0); // functions to collapse the tree
     this.expand(0); // function to expand the tree
     // this.render();
@@ -120,21 +123,21 @@ class Graph {
     if (siblingArray === undefined || siblingArray === null || siblingArray === '') {
       if (level === 0) {
         cd = collapseLevel(this.root, level);
-        updateNode(svg, cd, treemap, nodeSize);
+        updateNode(svg, this.root, cd, treemap, nodeSize);
       } else {
         this.root.children.forEach((d2) => {
           cd = collapseLevel(d2, level);
-          updateNode(svg, cd, treemap, nodeSize);
+          updateNode(svg, this.root, cd, treemap, nodeSize);
         });
         convertvalueToDefault();
       }
     } else if (level === 0) {
       cd = collapseLevel(this.root, level);
-      updateNode(svg, cd, treemap, nodeSize);
+      updateNode(svg, this.root, cd, treemap, nodeSize);
     } else {
       this.root.children.forEach((d2) => {
         cd = collapseLevelWithSibling(d2, level, siblingArray);
-        updateNode(svg, cd, treemap, nodeSize);
+        updateNode(svg, this.root, cd, treemap, nodeSize);
       });
       convertvalueToDefault();
     }
@@ -151,26 +154,25 @@ class Graph {
     if (siblingArray === undefined || siblingArray === null || siblingArray === '') {
       if (level === 0) {
         ed = expandLevel(this.root, level);
-        updateNode(svg, ed, treemap, nodeSize);
+        updateNode(svg, this.root, ed, treemap, nodeSize);
       } else {
         this.root.children.forEach((e2) => {
           ed = expandLevel(e2, level);
-          updateNode(svg, ed, treemap, nodeSize);
+          updateNode(svg, this.root, ed, treemap, nodeSize);
         });
         convertvalueToDefault();
       }
     } else if (level === 0) {
       ed = expandLevel(this.root, level);
-      updateNode(svg, ed, treemap, nodeSize);
+      updateNode(svg, this.root, ed, treemap, nodeSize);
     } else {
       this.root.children.forEach((e2) => {
         ed = expandLevelWithSiblings(e2, level, siblingArray, iscollapsed);
-        updateNode(svg, ed, treemap, nodeSize);
+        updateNode(svg, this.root, ed, treemap, nodeSize);
       });
       convertvalueToDefault();
     }
   }
 }
 
-export default new Graph();
-export { root };
+export default Graph;
