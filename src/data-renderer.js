@@ -2,7 +2,8 @@ import * as d3 from 'd3';
 import { adgData, csvData } from './data-loader';
 import { divElement, margin, width, height, nodeSize } from './dag';
 import updateNode from './update-node';
-import { collapseLevel, collapseLevelWithSibling, expandLevel, expandLevelWithSiblings, convertvalueToDefault } from './collapse-expand-tree';
+import collapseExpand from './collapse-expand-tree';
+// import { collapseLevel, collapseLevelWithSibling, expandLevel, expandLevelWithSiblings, convertvalueToDefault } from './collapse-expand-tree';
 
 /**
  *@description Class to render the DAG Graph.
@@ -122,24 +123,24 @@ class Graph {
 
     if (siblingArray === undefined || siblingArray === null || siblingArray === '') {
       if (level === 0) {
-        cd = collapseLevel(this.root, level);
+        cd = collapseExpand.collapseLevel(this.root, level);
         updateNode(svg, this.root, cd, treemap, nodeSize);
       } else {
         this.root.children.forEach((d2) => {
-          cd = collapseLevel(d2, level);
+          cd = collapseExpand.collapseLevel(d2, level);
           updateNode(svg, this.root, cd, treemap, nodeSize);
         });
-        convertvalueToDefault();
+        collapseExpand.convertvalueToDefault();
       }
     } else if (level === 0) {
-      cd = collapseLevel(this.root, level);
+      cd = collapseExpand.collapseLevel(this.root, level);
       updateNode(svg, this.root, cd, treemap, nodeSize);
     } else {
       this.root.children.forEach((d2) => {
-        cd = collapseLevelWithSibling(d2, level, siblingArray);
+        cd = collapseExpand.collapseLevelWithSibling(d2, level, siblingArray);
         updateNode(svg, this.root, cd, treemap, nodeSize);
       });
-      convertvalueToDefault();
+      collapseExpand.convertvalueToDefault();
     }
   }
   /**
@@ -154,24 +155,24 @@ class Graph {
     let ed;
     if (siblingArray === undefined || siblingArray === null || siblingArray === '') {
       if (level === 0) {
-        ed = expandLevel(this.root, level);
+        ed = collapseExpand.expandLevel(this.root, level);
         updateNode(svg, this.root, ed, treemap, nodeSize);
       } else {
         this.root.children.forEach((e2) => {
-          ed = expandLevel(e2, level);
+          ed = collapseExpand.expandLevel(e2, level);
           updateNode(svg, this.root, ed, treemap, nodeSize);
         });
-        convertvalueToDefault();
+        collapseExpand.convertvalueToDefault();
       }
     } else if (level === 0) {
-      ed = expandLevel(this.root, level);
+      ed = collapseExpand.expandLevel(this.root, level);
       updateNode(svg, this.root, ed, treemap, nodeSize);
     } else {
       this.root.children.forEach((e2) => {
-        ed = expandLevelWithSiblings(e2, level, siblingArray, iscollapsed);
+        ed = collapseExpand.expandLevelWithSiblings(e2, level, siblingArray, iscollapsed);
         updateNode(svg, this.root, ed, treemap, nodeSize);
       });
-      convertvalueToDefault();
+      collapseExpand.convertvalueToDefault();
     }
   }
 }
