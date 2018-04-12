@@ -1,7 +1,8 @@
 
 let collapseExpand = (() => {
-  let countc = 0;
-  let counte = 0;
+  let countc = 0; // counter for collapse function.
+  let counte = 0; // counter for expand function.
+
   /**
  * @description function to collapse tree according to depth level.
  * @param  {} d //tree Data or node Data

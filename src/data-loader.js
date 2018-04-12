@@ -1,16 +1,16 @@
 import Graph from './data-renderer';
 
-let adgData;
-let config;
-let csvData;
+let adgData; // variable to store the tree structured data.
+let config; // Nodes configuration like color and root.
+let csvData; // CSV to JSON converted data or JSON data if not CSV.
 /**
  * @description Function to convert the CSV data to JSON tree structure.
- * @param  {} data - take CSV data File
- * @param  {null} conf={root - Configuration object to configure the tree color
- * @param  {'#F7C7C5'} parentColor - parent node color
- * @param  {'#FFE2C5'} childColor - child or leaf node color
- * @param  {'#E9C9C9'} rootColor - root node color
- * @param  {} }
+ * @param  {} data - take CSV data File or JSON data.
+ * @param  {null} conf={root - Configuration object to configure the tree color.
+ * @param  {'#F7C7C5'} parentColor - parent node color.
+ * @param  {'#FFE2C5'} childColor - child or leaf node color.
+ * @param  {'#E9C9C9'} rootColor - root node color.
+ * @param  {} object - returns object}
  */
 const loadData = (data, conf = {
   root: null, parentColor: '#F7C7C5', childColor: '#FFE2C5', rootColor: '#E9C9C9',

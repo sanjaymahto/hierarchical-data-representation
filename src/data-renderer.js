@@ -3,8 +3,6 @@ import { adgData, csvData } from './data-loader';
 import { mountConfig } from './dag';
 import updateNode from './update-node';
 import collapseExpand from './collapse-expand-tree';
-// import { collapseLevel, collapseLevelWithSibling, expandLevel, expandLevelWithSiblings, convertvalueToDefault } from './collapse-expand-tree';
-
 /**
  *@description Class to render the DAG Graph.
  * @class Graph
@@ -110,7 +108,6 @@ class Graph {
     updateNode(this.svg, this.root, rootElement, this.treemap, mountConfig.nodeSize);
     this.collapse(0); // functions to collapse the tree
     this.expand(0); // function to expand the tree
-    // this.render();
   }
   /**
    * @description function to collapse the tree node.
@@ -120,7 +117,6 @@ class Graph {
   collapse(level, siblingArray) {
     const { svg, treemap } = this;
     let cd;
-
     if (siblingArray === undefined || siblingArray === null || siblingArray === '') {
       if (level === 0) {
         cd = collapseExpand.collapseLevel(this.root, level);
@@ -149,7 +145,6 @@ class Graph {
    * @param  {} siblingArray
    * @param  {} iscollapsed=false
    */
-
   expand(level, siblingArray, iscollapsed = false) {
     const { svg, treemap } = this;
     let ed;
