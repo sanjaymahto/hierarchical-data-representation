@@ -2,7 +2,7 @@
 
 const create = dag.default;
 
-let dagFn = create('div');
+let dagFn = create('#sam');
 let instance = dagFn(`parent,name
 India,East
 India,West
