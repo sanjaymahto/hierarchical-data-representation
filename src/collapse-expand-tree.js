@@ -8,19 +8,18 @@ let collapseExpand = (() => {
  * @param  {} level //depth level of tree
  */
   let collapseLevel = (d, level) => {
-    let cd;
     if (d.children && d.depth >= level) {
       d._children = d.children;
       d._children.forEach((dcol) => {
-        cd = collapseLevel(dcol, level);
+        collapseLevel(dcol, level);
       });
       d.children = null;
     } else if (d.children) {
       d.children.forEach((dcol) => {
-        cd = collapseLevel(dcol, level);
+        collapseLevel(dcol, level);
       });
     }
-    return cd;
+    return d;
   };
   /**
 * @description function to collapse the tree based on siblingArray.
@@ -29,26 +28,25 @@ let collapseExpand = (() => {
  * @param  {} siblingArray // array of names of child of that levels parent to  collapse
  */
   let collapseLevelWithSibling = (d, level, siblingArray) => {
-    let cd;
     if (d.children && d.depth === level) {
       if (siblingArray[countc] === d.data.name) {
         countc += 1;
         d._children = d.children;
         d._children.forEach((dcol) => {
-          cd = collapseLevelWithSibling(dcol, level, siblingArray);
+          collapseLevelWithSibling(dcol, level, siblingArray);
         });
         d.children = null;
       } else {
         d.children.forEach((dcol) => {
-          cd = collapseLevelWithSibling(dcol, level, siblingArray);
+          collapseLevelWithSibling(dcol, level, siblingArray);
         });
       }
     } else if (d.children) {
       d.children.forEach((dcol) => {
-        cd = collapseLevelWithSibling(dcol, level, siblingArray);
+        collapseLevelWithSibling(dcol, level, siblingArray);
       });
     }
-    return cd;
+    return d;
   };
   /**
 * @description function to expand tree according to depth level.

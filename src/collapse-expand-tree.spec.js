@@ -2,7 +2,7 @@
 /* eslint no-undef:0 */
 
 import { expect } from 'chai';
-import { collapseLevel, collapseLevelWithSibling, expandLevel, expandLevelWithSiblings } from './collapse-expand-tree';
+import collapseExpand from './collapse-expand-tree';
 
 describe('Checking collapse-expand-tree file functions', () => {
   let root;
@@ -10,89 +10,346 @@ describe('Checking collapse-expand-tree file functions', () => {
     root =
     {
       name: 'Top Level',
+      data: { name: 'Top Level' },
+      depth: 0,
       children: [
         {
           name: 'Level 2: A',
+          data: { name: 'Level 2: A' },
+          depth: 1,
           children: [
-            { name: 'Son of A' },
-            { name: 'Daughter of A' },
+            {
+              name: 'Son of A',
+              data: { name: 'Son of A' },
+              depth: 2,
+            },
+            {
+              name: 'Daughter of A',
+              data: { name: 'Daughter of A' },
+              depth: 2,
+            },
           ],
+          _children: null,
         },
-        { name: 'Level 2: B' },
+        {
+          name: 'Level 2: B',
+          data: { name: 'Level 2: B' },
+          depth: 1,
+        },
       ],
+      _children: null,
     };
   });
 
   it('function to check collapselevel without sibling Array', () => {
     let level = 0;
-    let collapseLvl = collapseLevel(root, level);
-    expect(collapseLevel).to.be.a('function');
+    let collapseLvl = collapseExpand.collapseLevel(root, level);
     expect(collapseLvl).to.be.a('object');
+    expect(collapseLvl).to.deep.equal({
+      name: 'Top Level',
+      data: { name: 'Top Level' },
+      depth: 0,
+      _children: [
+        {
+          name: 'Level 2: A',
+          data: { name: 'Level 2: A' },
+          depth: 1,
+          _children: [
+            {
+              name: 'Son of A',
+              data: { name: 'Son of A' },
+              depth: 2,
+            },
+            {
+              name: 'Daughter of A',
+              data: { name: 'Daughter of A' },
+              depth: 2,
+            },
+          ],
+          children: null,
+        },
+        {
+          name: 'Level 2: B',
+          data: { name: 'Level 2: B' },
+          depth: 1,
+        },
+      ],
+      children: null,
+    });
   });
   it('function to check collapselevel with sibling Array', () => {
     let level = 1;
     let siblingArray = ['Level 2: A'];
-    let collapseLvlWithSibling = collapseLevelWithSibling(root, level, siblingArray);
-    expect(collapseLevelWithSibling).to.be.a('function');
+    let collapseLvlWithSibling = collapseExpand.collapseLevelWithSibling(root, level, siblingArray);
     expect(collapseLvlWithSibling).to.be.a('object');
-  });
-  it('function to check expandlevel function without sibling Array', () => {
-    let level = 0;
-    root =
-    {
+    expect(collapseLvlWithSibling).to.deep.equal({
       name: 'Top Level',
-      _children: [
+      data: { name: 'Top Level' },
+      depth: 0,
+      children: [
         {
           name: 'Level 2: A',
-          children: [
-            { name: 'Son of A' },
-            { name: 'Daughter of A' },
+          data: { name: 'Level 2: A' },
+          depth: 1,
+          _children: [
+            {
+              name: 'Son of A',
+              data: { name: 'Son of A' },
+              depth: 2,
+            },
+            {
+              name: 'Daughter of A',
+              data: { name: 'Daughter of A' },
+              depth: 2,
+            },
           ],
+          children: null,
         },
-        { name: 'Level 2: B' },
+        {
+          name: 'Level 2: B',
+          data: { name: 'Level 2: B' },
+          depth: 1,
+        },
       ],
-      children: null,
-    };
-    let expandLvl = expandLevel(root, level);
-    expect(expandLevel).to.be.a('function');
-    expect(expandLvl).to.be.a('object');
+      _children: null,
+    });
   });
 });
 
 describe('Checking expand-tree functions', () => {
-  let root;
-  beforeEach(() => {
-    root =
+  it('function to check expandlevel function without sibling Array', () => {
+    let level = 0;
+    let root =
     {
       name: 'Top Level',
-      children: [
+      data: { name: 'Top Level' },
+      depth: 0,
+      _children: [
         {
           name: 'Level 2: A',
+          data: { name: 'Level 2: A' },
+          depth: 1,
           _children: [
-            { name: 'Son of A' },
-            { name: 'Daughter of A' },
+            {
+              name: 'Son of A',
+              data: { name: 'Son of A' },
+              depth: 2,
+            },
+            {
+              name: 'Daughter of A',
+              data: { name: 'Daughter of A' },
+              depth: 2,
+            },
           ],
           children: null,
         },
-        { name: 'Level 2: B' },
+        {
+          name: 'Level 2: B',
+          data: { name: 'Level 2: B' },
+          depth: 1,
+        },
       ],
+      children: null,
     };
+    let expandLvl = collapseExpand.expandLevel(root, level);
+    expect(expandLvl).to.be.a('object');
+    expect(expandLvl).to.deep.equal({
+      name: 'Top Level',
+      data: { name: 'Top Level' },
+      depth: 0,
+      children: [
+        {
+          name: 'Level 2: A',
+          data: { name: 'Level 2: A' },
+          depth: 1,
+          children: [
+            {
+              name: 'Son of A',
+              data: { name: 'Son of A' },
+              depth: 2,
+            },
+            {
+              name: 'Daughter of A',
+              data: { name: 'Daughter of A' },
+              depth: 2,
+            },
+          ],
+          _children: null,
+        },
+        {
+          name: 'Level 2: B',
+          data: { name: 'Level 2: B' },
+          depth: 1,
+        },
+      ],
+      _children: null,
+    });
   });
 
-  it('function to check expandlevel function with sibling Array with collpase boolean value as true.', () => {
+  it('function to check expandlevel function with sibling Array with iscollpased boolean value as false.', () => {
+    let root =
+    {
+      name: 'Top Level',
+      data: { name: 'Top Level' },
+      depth: 0,
+      children: [
+        {
+          name: 'Level 2: A',
+          data: { name: 'Level 2: A' },
+          depth: 1,
+          _children: [
+            {
+              name: 'Son of A',
+              data: { name: 'Son of A' },
+              depth: 2,
+            },
+            {
+              name: 'Daughter of A',
+              data: { name: 'Daughter of A' },
+              depth: 2,
+            },
+          ],
+          children: null,
+        },
+        {
+          name: 'Level 2: B',
+          data: { name: 'Level 2: B' },
+          depth: 1,
+        },
+      ],
+      _children: null,
+    };
     let level = 1;
     let siblingArray = ['Level 2: A'];
-    let iscollapsed = true;
-    let expanLevlWithSiblings = expandLevelWithSiblings(root, level, siblingArray, iscollapsed);
-    expect(expandLevelWithSiblings).to.be.a('function');
-    expect(expanLevlWithSiblings).to.be.a('object');
+    let iscollapsed = false;
+    let expanLvlWithSiblings = collapseExpand.expandLevelWithSiblings(root, level, siblingArray, iscollapsed);
+    expect(expanLvlWithSiblings).to.be.a('object');
+    expect(expanLvlWithSiblings).to.deep.equal({
+      name: 'Top Level',
+      data: { name: 'Top Level' },
+      depth: 0,
+      children: [
+        {
+          name: 'Level 2: A',
+          data: { name: 'Level 2: A' },
+          depth: 1,
+          _children: [
+            {
+              name: 'Son of A',
+              data: { name: 'Son of A' },
+              depth: 2,
+            },
+            {
+              name: 'Daughter of A',
+              data: { name: 'Daughter of A' },
+              depth: 2,
+            },
+          ],
+          children: null,
+        },
+        {
+          name: 'Level 2: B',
+          data: { name: 'Level 2: B' },
+          depth: 1,
+        },
+      ],
+      _children: null,
+    });
   });
-  it('function to check expandlevel function with sibling Array with collpase boolean value as false.', () => {
+  it('function to check expandlevel function with sibling Array with collpase boolean value as true.', () => {
+    let root =
+    {
+      name: 'Top Level',
+      data: { name: 'Top Level' },
+      depth: 0,
+      children: [
+        {
+          name: 'Level 2: A',
+          data: { name: 'Level 2: A' },
+          depth: 1,
+          _children: [
+            {
+              name: 'Son of A',
+              data: { name: 'Son of A' },
+              _children: [
+                {
+                  name: 'Son',
+                  data: { name: 'Son' },
+                  depth: 3,
+                },
+                {
+                  name: 'Daughter',
+                  data: { name: 'Daughter' },
+                  depth: 3,
+                },
+              ],
+              children: null,
+              depth: 2,
+            },
+            {
+              name: 'Daughter of A',
+              data: { name: 'Daughter of A' },
+              depth: 2,
+            },
+          ],
+          children: null,
+        },
+        {
+          name: 'Level 2: B',
+          data: { name: 'Level 2: B' },
+          depth: 1,
+        },
+      ],
+      _children: null,
+    };
     let level = 1;
     let siblingArray = ['Level 2: A'];
     let iscollapsed = true;
-    let expanLevlWithSiblings = expandLevelWithSiblings(root, level, siblingArray, iscollapsed);
-    expect(expandLevelWithSiblings).to.be.a('function');
-    expect(expanLevlWithSiblings).to.be.a('object');
+    let expanLvlWithSiblings = collapseExpand.expandLevelWithSiblings(root, level, siblingArray, iscollapsed);
+    expect(expanLvlWithSiblings).to.be.a('object');
+    expect(expanLvlWithSiblings).to.deep.equal({
+      name: 'Top Level',
+      data: { name: 'Top Level' },
+      depth: 0,
+      children: [
+        {
+          name: 'Level 2: A',
+          data: { name: 'Level 2: A' },
+          depth: 1,
+          _children: [
+            {
+              name: 'Son of A',
+              data: { name: 'Son of A' },
+              _children: [
+                {
+                  name: 'Son',
+                  data: { name: 'Son' },
+                  depth: 3,
+                },
+                {
+                  name: 'Daughter',
+                  data: { name: 'Daughter' },
+                  depth: 3,
+                },
+              ],
+              children: null,
+              depth: 2,
+            },
+            {
+              name: 'Daughter of A',
+              data: { name: 'Daughter of A' },
+              depth: 2,
+            },
+          ],
+          children: null,
+        },
+        {
+          name: 'Level 2: B',
+          data: { name: 'Level 2: B' },
+          depth: 1,
+        },
+      ],
+      _children: null,
+    });
   });
 });
