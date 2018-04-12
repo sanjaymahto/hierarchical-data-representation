@@ -39,7 +39,8 @@ Expand levels
 
 Update data. Should update the data only, keeps everything else same.
 
-    instance.data(newData)
+    instance.updateData(newData) /* new Data should be in CSV or JSON format same as uploaded while 
+    creating an Instance*/
 
 ## Prerequisites
 
@@ -60,7 +61,12 @@ NPM
   running project:
 ```
     1). Run `npm run build` command to run webpack to create a build.
-    2). After creating the build Run `npm start` to start the server.
+    2). After creating the build Run `npm start` to start the dev-server.
+```
+  Testing Project:
+```
+    1).checkout to unit-tests branch.
+    2.)Run `npm run test` command in the terminal.
 ```
 ## Result Image
 ![alt_text](https://i.imgur.com/NJXmfnj.png)
