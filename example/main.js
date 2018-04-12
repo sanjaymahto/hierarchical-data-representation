@@ -3,7 +3,7 @@
 const create = dag.default;
 
 let dagFn = create('#dag');
-let instance = dagFn(`parent,name
+let instance = dagFn(`parent,child
 India,East
 India,West
 India,South

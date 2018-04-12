@@ -77,7 +77,7 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
     .attr('dy', '.35em')
     .attr('x', d => (d.children || d._children ? -0 : 0))
     .attr('text-anchor', d => (d.children || d._children ? 'end' : 'start'))
-    .text(d => d.data.name)
+    .text(d => d.data.child)
     .attr('text-anchor', 'middle')
     .style('fill-opacity', 1);
 

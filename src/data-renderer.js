@@ -78,7 +78,7 @@ class Graph {
     // *********** Convert flat data into a nice tree *************** //
     // create a name: node map
     const dataMap = this.updatedResult.reduce((map, node) => {
-      map[node.name] = node;
+      map[node.child] = node;
       return map;
     }, {});
 

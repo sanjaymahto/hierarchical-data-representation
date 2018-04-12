@@ -30,24 +30,24 @@ const loadData = (data, conf = {
     }
 
     if (conf.root == null) {
-      result.push({ parent: null, name: result[0].parent });
+      result.push({ parent: null, child: result[0].parent });
     } else {
-      result.push({ parent: null, name: conf.root });
+      result.push({ parent: null, child: conf.root });
     }
     csvData = [...result];
   } else {
     csvData = data;
     result = data;
     if (conf.root == null) {
-      result.push({ parent: null, name: result[0].parent });
+      result.push({ parent: null, child: result[0].parent });
     } else {
-      result.push({ parent: null, name: conf.root });
+      result.push({ parent: null, child: conf.root });
     }
   }
   // *********** Convert flat data into a nice tree *************** //
   // create a name: node map
   const dataMap = result.reduce((map, node) => {
-    map[node.name] = node;
+    map[node.child] = node;
     return map;
   }, {});
   // create the tree array
