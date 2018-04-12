@@ -1,27 +1,23 @@
 import loadData from './data-loader';
 /**
- * @description Function to append SVG element to Selected Div element.
- * @param  {} mount='body'
+ * @description Function to append SVG element to Selected HTML element.
+ * @param  {} mount='body' ex. div,span,id where you want to render the tree visualization.
  */
-let divElement;
-let margin;
-let width;
-let height;
-let nodeSize;
+let mountConfig = {}; // mount config element.
 const dag = (mount = 'body', elemMargin = {
   top: 50, right: 90, bottom: 30, left: 500,
 }, elemWidth = 960, elemHeight = 500, elemNodeSize = 30) => {
-  divElement = mount;
+  mountConfig.divElement = mount;
 
-  // Set the dimensions and margins of the diagram
-  margin = {
+  // Set the dimensions and margins of the tree
+  mountConfig.margin = {
     top: elemMargin.top, right: elemMargin.right, bottom: elemMargin.bottom, left: elemMargin.left,
   };
-  width = elemWidth - margin.left - margin.right;
-  height = elemHeight - margin.top - margin.bottom;
-  nodeSize = elemNodeSize;
+  mountConfig.width = elemWidth - mountConfig.margin.left - mountConfig.margin.right;
+  mountConfig.height = elemHeight - mountConfig.margin.top - mountConfig.margin.bottom;
+  mountConfig.nodeSize = elemNodeSize;
   return loadData;
 };
 
 export { dag as default };
-export { divElement, margin, width, height, nodeSize };
+export { mountConfig };
