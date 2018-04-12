@@ -1,8 +1,8 @@
 /* eslint-disable */
 
-const Dag = dag.default;
+const create = dag.default;
 
-let dagFn = Dag('div');
+let dagFn = create('div');
 let instance = dagFn(`parent,name
 India,East
 India,West
