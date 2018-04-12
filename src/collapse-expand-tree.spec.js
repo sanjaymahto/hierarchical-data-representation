@@ -4,7 +4,7 @@
 import { expect } from 'chai';
 import collapseExpand from './collapse-expand-tree';
 
-describe('Checking collapse-expand-tree file functions', () => {
+describe('Checking collapse tree functions', () => {
   let root;
   beforeEach(() => {
     root =
@@ -41,7 +41,7 @@ describe('Checking collapse-expand-tree file functions', () => {
     };
   });
 
-  it('function to check collapselevel without sibling Array', () => {
+  it('function to check collapse tree according to level without sibling Array', () => {
     let level = 0;
     let collapseLvl = collapseExpand.collapseLevel(root, level);
     expect(collapseLvl).to.be.a('object');
@@ -77,7 +77,7 @@ describe('Checking collapse-expand-tree file functions', () => {
       children: null,
     });
   });
-  it('function to check collapselevel with sibling Array', () => {
+  it('function to check collapse tree according to level with sibling Array', () => {
     let level = 1;
     let siblingArray = ['Level 2: A'];
     let collapseLvlWithSibling = collapseExpand.collapseLevelWithSibling(root, level, siblingArray);
@@ -117,7 +117,7 @@ describe('Checking collapse-expand-tree file functions', () => {
 });
 
 describe('Checking expand-tree functions', () => {
-  it('function to check expandlevel function without sibling Array', () => {
+  it('function to check expand tree according to level without sibling Array', () => {
     let level = 0;
     let root =
     {
@@ -186,7 +186,7 @@ describe('Checking expand-tree functions', () => {
     });
   });
 
-  it('function to check expandlevel function with sibling Array with iscollpased boolean value as false.', () => {
+  it('function to check expand tree according to level with sibling Array and iscollpased boolean value as false.', () => {
     let root =
     {
       name: 'Top Level',
@@ -256,7 +256,7 @@ describe('Checking expand-tree functions', () => {
       _children: null,
     });
   });
-  it('function to check expandlevel function with sibling Array with collpase boolean value as true.', () => {
+  it('function to check expand tree according to level with sibling Array and iscollpase boolean value as true.', () => {
     let root =
     {
       name: 'Top Level',
