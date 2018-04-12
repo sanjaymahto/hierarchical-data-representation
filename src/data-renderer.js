@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { adgData, csvData } from './data-loader';
-import { divElement, margin, width, height, nodeSize } from './dag';
+import { mountConfig } from './dag';
 import updateNode from './update-node';
 import collapseExpand from './collapse-expand-tree';
 // import { collapseLevel, collapseLevelWithSibling, expandLevel, expandLevelWithSiblings, convertvalueToDefault } from './collapse-expand-tree';
@@ -27,17 +27,17 @@ class Graph {
     let treeData;
     treeData = [...adgData];
     // append the svg object to the body of the page
-    this.svg = d3.select(divElement).append('svg')
-      .attr('width', width + margin.right + margin.left)
-      .attr('height', height + margin.top + margin.bottom)
+    this.svg = d3.select(mountConfig.divElement).append('svg')
+      .attr('width', mountConfig.width + mountConfig.margin.right + mountConfig.margin.left)
+      .attr('height', mountConfig.height + mountConfig.margin.top + mountConfig.margin.bottom)
       .append('g')
-      .attr('transform', `translate(${margin.left},${margin.top})`);
+      .attr('transform', `translate(${mountConfig.margin.left},${mountConfig.margin.top})`);
 
     const rendersvg = this.svg;
 
     // Assigns parent, children, height, depth
     this.root = d3.hierarchy(treeData[0], d => d.children);
-    this.root.y0 = height / 2;
+    this.root.y0 = mountConfig.height / 2;
     this.root.x0 = 0;
     const rootElement = this.root;
 
@@ -48,7 +48,7 @@ class Graph {
     const renderTreemap = this.treemap;
 
     // to update the node
-    updateNode(rendersvg, this.root, rootElement, renderTreemap, nodeSize);
+    updateNode(rendersvg, this.root, rootElement, renderTreemap, mountConfig.nodeSize);
   }
   /**
    *@description function to  update the data and recreating the tree.
@@ -102,12 +102,12 @@ class Graph {
 
     // recreating the tree and Assigning parent, children, height, depth
     this.root = d3.hierarchy(this.updatedData[0], d => d.children);
-    this.root.y0 = height / 2;
+    this.root.y0 = mountConfig.height / 2;
     this.root.x0 = 0;
     const rootElement = this.root;
 
     // to update the node
-    updateNode(this.svg, this.root, rootElement, this.treemap, nodeSize);
+    updateNode(this.svg, this.root, rootElement, this.treemap, mountConfig.nodeSize);
     this.collapse(0); // functions to collapse the tree
     this.expand(0); // function to expand the tree
     // this.render();
@@ -124,21 +124,21 @@ class Graph {
     if (siblingArray === undefined || siblingArray === null || siblingArray === '') {
       if (level === 0) {
         cd = collapseExpand.collapseLevel(this.root, level);
-        updateNode(svg, this.root, cd, treemap, nodeSize);
+        updateNode(svg, this.root, cd, treemap, mountConfig.nodeSize);
       } else {
         this.root.children.forEach((d2) => {
           cd = collapseExpand.collapseLevel(d2, level);
-          updateNode(svg, this.root, cd, treemap, nodeSize);
+          updateNode(svg, this.root, cd, treemap, mountConfig.nodeSize);
         });
         collapseExpand.convertvalueToDefault();
       }
     } else if (level === 0) {
       cd = collapseExpand.collapseLevel(this.root, level);
-      updateNode(svg, this.root, cd, treemap, nodeSize);
+      updateNode(svg, this.root, cd, treemap, mountConfig.nodeSize);
     } else {
       this.root.children.forEach((d2) => {
         cd = collapseExpand.collapseLevelWithSibling(d2, level, siblingArray);
-        updateNode(svg, this.root, cd, treemap, nodeSize);
+        updateNode(svg, this.root, cd, treemap, mountConfig.nodeSize);
       });
       collapseExpand.convertvalueToDefault();
     }
@@ -156,21 +156,21 @@ class Graph {
     if (siblingArray === undefined || siblingArray === null || siblingArray === '') {
       if (level === 0) {
         ed = collapseExpand.expandLevel(this.root, level);
-        updateNode(svg, this.root, ed, treemap, nodeSize);
+        updateNode(svg, this.root, ed, treemap, mountConfig.nodeSize);
       } else {
         this.root.children.forEach((e2) => {
           ed = collapseExpand.expandLevel(e2, level);
-          updateNode(svg, this.root, ed, treemap, nodeSize);
+          updateNode(svg, this.root, ed, treemap, mountConfig.nodeSize);
         });
         collapseExpand.convertvalueToDefault();
       }
     } else if (level === 0) {
       ed = collapseExpand.expandLevel(this.root, level);
-      updateNode(svg, this.root, ed, treemap, nodeSize);
+      updateNode(svg, this.root, ed, treemap, mountConfig.nodeSize);
     } else {
       this.root.children.forEach((e2) => {
         ed = collapseExpand.expandLevelWithSiblings(e2, level, siblingArray, iscollapsed);
-        updateNode(svg, this.root, ed, treemap, nodeSize);
+        updateNode(svg, this.root, ed, treemap, mountConfig.nodeSize);
       });
       collapseExpand.convertvalueToDefault();
     }
