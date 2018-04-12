@@ -39,7 +39,7 @@ Expand levels
 
 Update data. Should update the data only, keeps everything else same.
 
-    instance.data(newData)
+    instance.updateData(newData) /* new Data should be in CSV or JSON format same as uploaded while creating an Instance*/
 
 ## Prerequisites
 
