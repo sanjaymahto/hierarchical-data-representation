@@ -119,7 +119,7 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
   const linkEnter = link.enter().insert('path', 'g')
     .attr('class', 'link')
     .attr('d', () => {
-      const o = { x: source.x0, y: source.y0 };
+      let o = { x: source.x0, y: source.y0 };
       return diagonal(o, o);
     });
 
