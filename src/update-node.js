@@ -34,7 +34,6 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
 
   // Normalize for fixed-depth.
   nodes.forEach((d) => { d.y = d.depth * 90; });
-
   // ****************** Nodes section *************************** //
   // Update the nodes...
   const node = rendersvg.selectAll('g.node')
