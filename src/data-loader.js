@@ -13,7 +13,7 @@ let csvData; // CSV to JSON converted data or JSON data if not CSV.
  * @param  {} object - returns object}
  */
 const loadData = (data, conf = {
-  root: null, parentColor: '#F7C7C5', childColor: '#FFE2C5', rootColor: '#E9C9C9',
+  parentColor: '#F7C7C5', childColor: '#FFE2C5', rootColor: '#E9C9C9',
 }) => {
   config = conf;
   let result = [];
@@ -28,21 +28,10 @@ const loadData = (data, conf = {
       }
       result.push(obj);
     }
-
-    if (conf.root == null) {
-      result.push({ parent: null, child: result[0].parent });
-    } else {
-      result.push({ parent: null, child: conf.root });
-    }
     csvData = [...result];
   } else {
     csvData = data;
     result = data;
-    if (conf.root == null) {
-      result.push({ parent: null, child: result[0].parent });
-    } else {
-      result.push({ parent: null, child: conf.root });
-    }
   }
   // *********** Convert flat data into a nice tree *************** //
   // create a name: node map
