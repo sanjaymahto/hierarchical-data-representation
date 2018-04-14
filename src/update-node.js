@@ -122,7 +122,8 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
       return diagonal(o, o);
     });
 
-    // UPDATE
+
+  // UPDATE
   const linkUpdate = linkEnter.merge(link);
 
   // Transition back to the parent element position
@@ -132,6 +133,33 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
 
   // Remove any exiting links
   link.exit()
+    .remove();
+
+  // Update the link text
+  let linktext = rendersvg.selectAll('g.link')
+    .data(links, d => d.id);
+
+  let linketextEnter = linktext.enter().insert('g')
+    .attr('class', 'link')
+    .attr('transform', d => `translate(${(d.x + d.parent.x) / 2},${(d.y + d.parent.y) / 2})`);
+
+
+    // Add arc text for the nodes
+  linketextEnter.append('text')
+    .attr('dy', '.35em')
+    .attr('text-anchor', 'middle')
+    .text('child');
+
+  // Update the link text
+  const linkTextUpdate = linketextEnter.merge(linktext);
+
+  // Transition link text to their new positions
+  linkTextUpdate.transition()
+    .duration(duration)
+    .attr('transform', d => `translate(${(d.x + d.parent.x) / 2},${(d.y + d.parent.y) / 2})`);
+
+  // Transition exiting link text to the parent's new position.
+  linktext.exit()
     .remove();
 
   // Store the old positions for transition.

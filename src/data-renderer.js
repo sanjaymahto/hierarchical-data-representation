@@ -41,7 +41,7 @@ class Graph {
 
     // declares a tree layout and assigns the size
     this.treemap = d3.tree()
-      .nodeSize([35])
+      .nodeSize([40, 20])
       .separation((a, b) => (a.parent === b.parent ? 2 : 3));
     const renderTreemap = this.treemap;
 
