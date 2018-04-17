@@ -41,7 +41,7 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
   const links = treeData.descendants().slice(1);
 
   // Normalize for fixed-depth.
-  nodes.forEach((d) => { d.y = d.depth * 140; });
+  nodes.forEach((d) => { d.y = d.depth * 135; });
   // ****************** Nodes section *************************** //
   // Update the nodes...
   const node = rendersvg.selectAll('g.node')
@@ -68,19 +68,6 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
   nodeEnter.append('circle')
     .attr('class', 'node')
     .attr('r', nodeSize)
-    .on('mouseover', (d) => {
-      div.transition()
-        .duration(200)
-        .style('opacity', 0.9);
-      div.html(`child of ${d.data.parent}`)
-        .style('left', `${d3.event.pageX - 70}px`)
-        .style('top', `${d3.event.pageY - 10}px`);
-    })
-    .on('mouseout', () => {
-      div.transition()
-        .duration(500)
-        .style('opacity', 0);
-    })
     .style('fill', (d) => {
       if (d.parent === undefined || d.parent === null || d.parent === 'null') {
         return config.rootColor;
@@ -99,20 +86,7 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
     .attr('text-anchor', d => (d.children || d._children ? 'end' : 'start'))
     .text(d => d.data.child)
     .attr('text-anchor', 'middle')
-    .style('fill-opacity', 1)
-    .on('mouseover', (d) => {
-      div.transition()
-        .duration(200)
-        .style('opacity', 0.9);
-      div.html(`child of ${d.data.parent}`)
-        .style('left', `${d3.event.pageX - 70}px`)
-        .style('top', `${d3.event.pageY - 10}px`);
-    })
-    .on('mouseout', () => {
-      div.transition()
-        .duration(500)
-        .style('opacity', 0);
-    });
+    .style('fill-opacity', 1);
 
 
   // UPDATE
@@ -174,7 +148,10 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
   let linktext = rendersvg.selectAll('g.link')
     .data(links, d => d.id);
 
-  let linketextEnter = linktext.enter().insert('g')
+  // let linketextEnter = linktext.enter().insert('g')
+  //   .attr('class', 'link');
+
+  let linketextEnter = linktext.enter().append('g')
     .attr('class', 'link');
 
   // Add arc text for the nodes
@@ -199,15 +176,6 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
         .duration(500)
         .style('opacity', 0);
     })
-    .attr('transform', (d) => {
-      let middleIndex = d.parent.children.length / 2; // Find the middle index
-      let index = d.parent.children.indexOf(d); // Find index of the current node
-      // If the node is a right node, rotate it
-      if (index >= middleIndex) {
-        return `rotate(180, ${(d.x + d.parent.x) / 2}, ${(d.y + d.parent.y) / 2})`;
-      }
-      return 'rotate(0)';
-    })
     .append('textPath')
     .attr('class', 'textpath')
     .attr('startOffset', '50%')
@@ -230,7 +198,16 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
 
   // Transition link text to their new positions
   linkTextUpdate.transition()
-    .duration(duration);
+    .duration(duration)
+    .attr('transform', (d) => {
+      let middleIndex = d.parent.children.length / 2; // Find the middle index
+      let index = d.parent.children.indexOf(d); // Find index of the current node
+      // If the node is a right node, rotate it
+      if (index >= middleIndex) {
+        return `rotate(180, ${(d.x + d.parent.x) / 2}, ${(d.y + d.parent.y) / 2})`;
+      }
+      return `rotate(360, ${(d.x + d.parent.x) / 2}, ${(d.y + d.parent.y) / 2})`;
+    });
 
   // Transition exiting link text to the parent's new position.
   linktext.exit()
