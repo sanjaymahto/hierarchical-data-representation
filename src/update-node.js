@@ -199,6 +199,15 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
         .duration(500)
         .style('opacity', 0);
     })
+    .attr('transform', (d) => {
+      let middleIndex = d.parent.children.length / 2; // Find the middle index
+      let index = d.parent.children.indexOf(d); // Find index of the current node
+      // If the node is a right node, rotate it
+      if (index >= middleIndex) {
+        return `rotate(180, ${(d.x + d.parent.x) / 2}, ${(d.y + d.parent.y) / 2})`;
+      }
+      return 'rotate(0)';
+    })
     .append('textPath')
     .attr('class', 'textpath')
     .attr('startOffset', '50%')
@@ -213,16 +222,8 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
         return changedStr;
       }
       return str;
-    })
-    .attr('transform', (d) => {
-      let middleIndex = d.parent.children.length / 2; // Find the middle index
-      let index = d.parent.children.indexOf(d); // Find index of the current node
-      // If the node is a right node, rotate it
-      if (index >= middleIndex) {
-        return 'rotate(180)';
-      }
-      return 'rotate(0)';
     });
+
 
   // Update the link text
   const linkTextUpdate = linketextEnter.merge(linktext);
