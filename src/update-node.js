@@ -41,7 +41,7 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
   const links = treeData.descendants().slice(1);
 
   // Normalize for fixed-depth.
-  nodes.forEach((d) => { d.y = d.depth * 130; });
+  nodes.forEach((d) => { d.y = d.depth * 140; });
   // ****************** Nodes section *************************** //
   // Update the nodes...
   const node = rendersvg.selectAll('g.node')
@@ -182,12 +182,17 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
     .attr('dy', '-.25em')
     .style('text-anchor', 'middle') // place the text halfway on the arc
     .on('mouseover', (d) => {
-      div.transition()
-        .duration(200)
-        .style('opacity', 0.9);
-      div.html(`child of ${d.data.parent}`)
-        .style('left', `${d3.event.pageX - 70}px`)
-        .style('top', `${d3.event.pageY - 10}px`);
+      let arcLength = Math.sqrt((((d.x - d.parent.x) ** 2) + ((d.y - d.parent.y) ** 2)));
+      let str = `Child Of ${d.data.parent}`;
+      let strlen = str.length;
+      if ((arcLength - nodeSize) < (strlen * 8)) {
+        div.transition()
+          .duration(200)
+          .style('opacity', 0.9);
+        div.html(`child of ${d.data.parent}`)
+          .style('left', `${d3.event.pageX - 70}px`)
+          .style('top', `${d3.event.pageY - 10}px`);
+      }
     })
     .on('mouseout', () => {
       div.transition()
@@ -203,7 +208,9 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
       let str = `Child Of ${d.data.parent}`;
       let strlen = str.length;
       if ((arcLength - nodeSize) < (strlen * 8)) {
-        return 'Shortened Mssg...';
+        let changedStr = str.substring(0, ((arcLength - nodeSize - 4) / 8));
+        changedStr += '...';
+        return changedStr;
       }
       return str;
     })
