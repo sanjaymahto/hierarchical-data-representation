@@ -7,7 +7,11 @@ module.exports = {
         "no-underscore-dangle": 0,
         "prefer-const": 0,
         "prefer-destructuring": 0,
-        "max-len": 0
+        "max-len": 0,
+        "one-var": 0,
+        "no-cond-assign": 0,
+        "no-plusplus": 0,
+        "func-names": 0
     },
     "env": {
         "browser": true,

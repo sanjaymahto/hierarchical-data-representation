@@ -1,4 +1,7 @@
+import * as d3 from 'd3';
 import { config } from './data-loader';
+import { mountConfig } from './dag';
+
 
 /**
  * @description Creates a curved (diagonal) path from parent to the child nodes
@@ -25,6 +28,11 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
   const duration = 550;
   const source = rootElement;
 
+  // Creating Div element for tooltip
+  let div = d3.select(mountConfig.divElement).append('div')
+    .attr('class', 'tooltip')
+    .style('opacity', 0);
+
   // Assigns the x and y position for the nodes
   treeData = renderTreemap(root);
 
@@ -33,7 +41,7 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
   const links = treeData.descendants().slice(1);
 
   // Normalize for fixed-depth.
-  nodes.forEach((d) => { d.y = d.depth * 90; });
+  nodes.forEach((d) => { d.y = d.depth * 130; });
   // ****************** Nodes section *************************** //
   // Update the nodes...
   const node = rendersvg.selectAll('g.node')
@@ -60,6 +68,19 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
   nodeEnter.append('circle')
     .attr('class', 'node')
     .attr('r', nodeSize)
+    .on('mouseover', (d) => {
+      div.transition()
+        .duration(200)
+        .style('opacity', 0.9);
+      div.html(`child of ${d.data.parent}`)
+        .style('left', `${d3.event.pageX - 70}px`)
+        .style('top', `${d3.event.pageY - 10}px`);
+    })
+    .on('mouseout', () => {
+      div.transition()
+        .duration(500)
+        .style('opacity', 0);
+    })
     .style('fill', (d) => {
       if (d.parent === undefined || d.parent === null || d.parent === 'null') {
         return config.rootColor;
@@ -78,7 +99,20 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
     .attr('text-anchor', d => (d.children || d._children ? 'end' : 'start'))
     .text(d => d.data.child)
     .attr('text-anchor', 'middle')
-    .style('fill-opacity', 1);
+    .style('fill-opacity', 1)
+    .on('mouseover', (d) => {
+      div.transition()
+        .duration(200)
+        .style('opacity', 0.9);
+      div.html(`child of ${d.data.parent}`)
+        .style('left', `${d3.event.pageX - 70}px`)
+        .style('top', `${d3.event.pageY - 10}px`);
+    })
+    .on('mouseout', () => {
+      div.transition()
+        .duration(500)
+        .style('opacity', 0);
+    });
 
 
   // UPDATE
@@ -116,6 +150,7 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
 
   // Enter any new links at the parent's previous position.
   const linkEnter = link.enter().insert('path', 'g')
+    .attr('id', (d, j) => `edgePath${j}`)
     .attr('class', 'link')
     .attr('d', () => {
       let o = { x: source.x0, y: source.y0 };
@@ -140,23 +175,54 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
     .data(links, d => d.id);
 
   let linketextEnter = linktext.enter().insert('g')
-    .attr('class', 'link')
-    .attr('transform', d => `translate(${(d.x + d.parent.x) / 2},${(d.y + d.parent.y) / 2})`);
+    .attr('class', 'link');
 
-
-    // Add arc text for the nodes
+  // Add arc text for the nodes
   linketextEnter.append('text')
-    .attr('dy', '.35em')
-    .attr('text-anchor', 'middle')
-    .text('child');
+    .attr('dy', '-.25em')
+    .style('text-anchor', 'middle') // place the text halfway on the arc
+    .on('mouseover', (d) => {
+      div.transition()
+        .duration(200)
+        .style('opacity', 0.9);
+      div.html(`child of ${d.data.parent}`)
+        .style('left', `${d3.event.pageX - 70}px`)
+        .style('top', `${d3.event.pageY - 10}px`);
+    })
+    .on('mouseout', () => {
+      div.transition()
+        .duration(500)
+        .style('opacity', 0);
+    })
+    .append('textPath')
+    .attr('class', 'textpath')
+    .attr('startOffset', '50%')
+    .attr('xlink:href', (d, j) => `#edgePath${j}`)
+    .text((d) => {
+      let arcLength = Math.sqrt((((d.x - d.parent.x) ** 2) + ((d.y - d.parent.y) ** 2)));
+      let str = `Child Of ${d.data.parent}`;
+      let strlen = str.length;
+      if ((arcLength - nodeSize) < (strlen * 8)) {
+        return 'Shortened Mssg...';
+      }
+      return str;
+    })
+    .attr('transform', (d) => {
+      let middleIndex = d.parent.children.length / 2; // Find the middle index
+      let index = d.parent.children.indexOf(d); // Find index of the current node
+      // If the node is a right node, rotate it
+      if (index >= middleIndex) {
+        return 'rotate(180)';
+      }
+      return 'rotate(0)';
+    });
 
   // Update the link text
   const linkTextUpdate = linketextEnter.merge(linktext);
 
   // Transition link text to their new positions
   linkTextUpdate.transition()
-    .duration(duration)
-    .attr('transform', d => `translate(${(d.x + d.parent.x) / 2},${(d.y + d.parent.y) / 2})`);
+    .duration(duration);
 
   // Transition exiting link text to the parent's new position.
   linktext.exit()

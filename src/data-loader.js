@@ -54,6 +54,7 @@ const loadData = (data, conf = {
       adgData.push(node);
     }
   });
+  // console.log('Adg data :', adgData);
   return new Graph();
 };
 
