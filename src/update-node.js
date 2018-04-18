@@ -124,7 +124,7 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
 
   // Enter any new links at the parent's previous position.
   const linkEnter = link.enter().insert('path', 'g')
-    .attr('id', (d, j) => `edgePath${j}`)
+    .attr('id', d => `edgePath${d.id}`)
     .attr('class', 'link')
     .attr('d', () => {
       let o = { x: source.x0, y: source.y0 };
@@ -179,7 +179,7 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
     .append('textPath')
     .attr('class', 'textpath')
     .attr('startOffset', '50%')
-    .attr('xlink:href', (d, j) => `#edgePath${j}`)
+    .attr('xlink:href', d => `#edgePath${d.id}`)
     .text((d) => {
       let arcLength = Math.sqrt((((d.x - d.parent.x) ** 2) + ((d.y - d.parent.y) ** 2)));
       let str = `Child Of ${d.data.parent}`;
@@ -206,7 +206,7 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
       if (index >= middleIndex) {
         return `rotate(180, ${(d.x + d.parent.x) / 2}, ${(d.y + d.parent.y) / 2})`;
       }
-      return `rotate(360, ${(d.x + d.parent.x) / 2}, ${(d.y + d.parent.y) / 2})`;
+      return `rotate(0, ${(d.x + d.parent.x) / 2}, ${(d.y + d.parent.y) / 2})`;
     });
 
   // Transition exiting link text to the parent's new position.
