@@ -190,6 +190,25 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
   // Update the link text
   const linkTextUpdate = linketextEnter.merge(linktext);
 
+  console.log('Link node update: ', linkTextUpdate);
+
+  linkTextUpdate.selectAll('textPath')
+    .attr('class', 'textpath')
+    .attr('startOffset', '50%')
+    .attr('xlink:href', d => `#edgePath${d.id}`)
+    .text((d) => {
+      let arcLength = Math.sqrt((((d.x - d.parent.x) ** 2) + ((d.y - d.parent.y) ** 2)));
+      let str = `Child Of Child Of ${d.data.parent}`;
+      let strlen = str.length;
+      if ((arcLength - nodeSize) < (strlen * 8)) {
+        let changedStr = str.substring(0, ((arcLength - nodeSize - 4) / 8));
+        changedStr += '...';
+        return changedStr;
+      }
+      return str;
+    });
+
+
   // Transition link text to their new positions
   linkTextUpdate.transition()
     .duration(duration)
