@@ -190,8 +190,6 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
   // Update the link text
   const linkTextUpdate = linketextEnter.merge(linktext);
 
-  console.log('Link node update: ', linkTextUpdate);
-
   linkTextUpdate.selectAll('textPath')
     .attr('class', 'textpath')
     .attr('startOffset', '50%')
@@ -207,7 +205,6 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
       }
       return str;
     });
-
 
   // Transition link text to their new positions
   linkTextUpdate.transition()
