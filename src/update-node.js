@@ -2,7 +2,6 @@ import * as d3 from 'd3';
 import { config } from './data-loader';
 import { mountConfig } from './dag';
 
-
 /**
  * @description Creates a curved (diagonal) path from parent to the child nodes
  * @param  {} s
@@ -47,7 +46,7 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
   const node = rendersvg.selectAll('g.node')
     .data(nodes, d => d.id || (d.id = i += 1));
 
-    // Enter any new nodes at the parent's previous position.
+  // Enter any new nodes at the parent's previous position.
   const nodeEnter = node.enter().append('g')
     .attr('class', 'node')
     .attr('transform', () => `translate(${source.x0},${source.y0})`)
@@ -64,7 +63,7 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
       }
     });
 
-    // Add Circle for the nodes
+  // Add Circle for the nodes
   nodeEnter.append('circle')
     .attr('class', 'node')
     .attr('r', nodeSize)
@@ -78,7 +77,6 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
       return config.parentColor;
     });
 
-
   // Add labels for the nodes
   nodeEnter.append('text')
     .attr('dy', '.35em')
@@ -87,7 +85,6 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
     .text(d => d.data.child)
     .attr('text-anchor', 'middle')
     .style('fill-opacity', 1);
-
 
   // UPDATE
   const nodeUpdate = nodeEnter.merge(node);
@@ -111,7 +108,6 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
     })
     .attr('cursor', 'pointer');
 
-
   // Remove any exiting nodes
   node.exit()
     .remove();
@@ -131,7 +127,6 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
       return diagonal(o, o);
     });
 
-
   // UPDATE
   const linkUpdate = linkEnter.merge(link);
 
@@ -147,9 +142,6 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
   // Update the link text
   let linktext = rendersvg.selectAll('g.link')
     .data(links, d => d.id);
-
-  // let linketextEnter = linktext.enter().insert('g')
-  //   .attr('class', 'link');
 
   let linketextEnter = linktext.enter().append('g')
     .attr('class', 'link');
@@ -191,7 +183,6 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
       }
       return str;
     });
-
 
   // Update the link text
   const linkTextUpdate = linketextEnter.merge(linktext);
