@@ -13,10 +13,6 @@ East India,Kolkata
 West India,Pune
 West India,Mumbai
 Mumbai,Juhu
-Mumbai,Juhu
-Mumbai,Juhu
-Mumbai,Juhu
-Mumbai,Juhu
 South India,Bengaluru
 South India,Hyderabad
 Hyderabad,Aamerpet
