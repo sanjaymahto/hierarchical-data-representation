@@ -30,7 +30,8 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
   // Creating Div element for tooltip
   let div = d3.select(mountConfig.divElement).append('div')
     .attr('class', 'tooltip')
-    .style('opacity', 0);
+    // .style('opacity', 0);
+    .style('display', 'none');
 
   // Assigns the x and y position for the nodes
   treeData = renderTreemap(root);
@@ -152,13 +153,14 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
     .style('text-anchor', 'middle') // place the text halfway on the arc
     .on('mouseover', (d) => {
       let arcLength = Math.sqrt((((d.x - d.parent.x) ** 2) + ((d.y - d.parent.y) ** 2)));
-      let str = `Child Of ${d.data.parent}`;
+      let str = `Child Of Child Of ${d.data.parent}`;
       let strlen = str.length;
       if ((arcLength - nodeSize) < (strlen * 8)) {
         div.transition()
           .duration(200)
-          .style('opacity', 0.9);
-        div.html(`child of ${d.data.parent}`)
+          // .style('opacity', 0.9);
+          .style('display', 'block');
+        div.html(`child of Child Of ${d.data.parent}`)
           .style('left', `${d3.event.pageX - 70}px`)
           .style('top', `${d3.event.pageY - 10}px`);
       }
@@ -166,7 +168,8 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
     .on('mouseout', () => {
       div.transition()
         .duration(500)
-        .style('opacity', 0);
+        // .style('opacity', 0);
+        .style('display', 'none');
     })
     .append('textPath')
     .attr('class', 'textpath')
@@ -174,7 +177,7 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
     .attr('xlink:href', d => `#edgePath${d.id}`)
     .text((d) => {
       let arcLength = Math.sqrt((((d.x - d.parent.x) ** 2) + ((d.y - d.parent.y) ** 2)));
-      let str = `Child Of ${d.data.parent}`;
+      let str = `Child Of Child Of ${d.data.parent}`;
       let strlen = str.length;
       if ((arcLength - nodeSize) < (strlen * 8)) {
         let changedStr = str.substring(0, ((arcLength - nodeSize - 4) / 8));
