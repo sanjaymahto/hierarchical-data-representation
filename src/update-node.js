@@ -24,7 +24,7 @@ function diagonal(s, d) {
 export default function updateNode(rendersvg, root, rootElement, renderTreemap, nodeSize) {
   let i = 0;
   let treeData;
-  const duration = 550;
+  const duration = 500;
   const source = rootElement;
 
   // Creating Div element for tooltip
@@ -209,14 +209,25 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
   // Transition link text to their new positions
   linkTextUpdate.transition()
     .duration(duration)
-    .attr('transform', (d) => {
+    /*  .attr('transform', (d) => {
+        let middleIndex = d.parent.children.length / 2; // Find the middle index
+        let index = d.parent.children.indexOf(d); // Find index of the current node
+        // If the node is a right node, rotate it
+        if (index >= middleIndex) {
+          return `rotate(180, ${(d.x + d.parent.x) / 2}, ${(d.y + d.parent.y) / 2})`;
+        }
+        return `rotate(0, ${(d.x + d.parent.x) / 2}, ${(d.y + d.parent.y) / 2})`;
+      }) */
+    .attrTween('transform', (d) => {
       let middleIndex = d.parent.children.length / 2; // Find the middle index
       let index = d.parent.children.indexOf(d); // Find index of the current node
       // If the node is a right node, rotate it
-      if (index >= middleIndex) {
-        return `rotate(180, ${(d.x + d.parent.x) / 2}, ${(d.y + d.parent.y) / 2})`;
+      if (index < middleIndex) {
+        let k = d3.interpolate(0, 360);
+        return t => `rotate(${k(t)}, ${(d.x + d.parent.x) / 2}, ${(d.y + d.parent.y) / 2})`;
       }
-      return `rotate(0, ${(d.x + d.parent.x) / 2}, ${(d.y + d.parent.y) / 2})`;
+      let k = d3.interpolate(0, 180);
+      return t => `rotate(${k(t)}, ${(d.x + d.parent.x) / 2}, ${(d.y + d.parent.y) / 2})`;
     });
 
   // Transition exiting link text to the parent's new position.
