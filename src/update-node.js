@@ -8,6 +8,16 @@ import { mountConfig } from './dag';
  * @param  {} d
  */
 function diagonal(s, d) {
+  let middleIndex = s.parent.children.length / 2; // Find the middle index
+  let index = s.parent.children.indexOf(s); // Find index of the current node
+  // If the node is a right node, rotate it
+  if (index >= middleIndex) {
+    const path = `M ${d.x} ${d.y}
+  C ${(s.x + d.x) / 2} ${d.y},
+    ${(s.x + d.x) / 2} ${s.y},
+    ${s.x} ${s.y}`;
+    return path;
+  }
   const path = `M ${s.x} ${s.y}
   C ${(s.x + d.x) / 2} ${s.y},
     ${(s.x + d.x) / 2} ${d.y},
@@ -30,7 +40,6 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
   // Creating Div element for tooltip
   let div = d3.select(mountConfig.divElement).append('div')
     .attr('class', 'tooltip')
-    // .style('opacity', 0);
     .style('display', 'none');
 
   // Assigns the x and y position for the nodes
@@ -125,7 +134,11 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
     .attr('class', 'link')
     .attr('d', () => {
       let o = { x: source.x0, y: source.y0 };
-      return diagonal(o, o);
+      const path = `M ${o.x} ${o.y}
+      C ${(o.x + o.x) / 2} ${o.y},
+        ${(o.x + o.x) / 2} ${o.y},
+        ${o.x} ${o.y}`;
+      return path;
     });
 
   // UPDATE
@@ -158,7 +171,6 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
       if ((arcLength - nodeSize) < (strlen * 8)) {
         div.transition()
           .duration(200)
-          // .style('opacity', 0.9);
           .style('display', 'block');
         div.html(`child of Child Of ${d.data.parent}`)
           .style('left', `${d3.event.pageX - 70}px`)
@@ -168,7 +180,6 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
     .on('mouseout', () => {
       div.transition()
         .duration(500)
-        // .style('opacity', 0);
         .style('display', 'none');
     })
     .append('textPath')
@@ -208,27 +219,7 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
 
   // Transition link text to their new positions
   linkTextUpdate.transition()
-    .duration(duration)
-    .attr('transform', (d) => {
-      let middleIndex = d.parent.children.length / 2; // Find the middle index
-      let index = d.parent.children.indexOf(d); // Find index of the current node
-      // If the node is a right node, rotate it
-      if (index >= middleIndex) {
-        return `rotate(180, ${(d.x + d.parent.x) / 2}, ${(d.y + d.parent.y) / 2})`;
-      }
-      return `rotate(0, ${(d.x + d.parent.x) / 2}, ${(d.y + d.parent.y) / 2})`;
-    });
-  // .attrTween('transform', (d) => {
-  //   let middleIndex = d.parent.children.length / 2; // Find the middle index
-  //   let index = d.parent.children.indexOf(d); // Find index of the current node
-  //   // If the node is a right node, rotate it
-  //   if (index < middleIndex) {
-  //     let k = d3.interpolate(0, 360);
-  //     return t => `rotate(${k(t)}, ${(d.x + d.parent.x) / 2}, ${(d.y + d.parent.y) / 2})`;
-  //   }
-  //   let k = d3.interpolate(0, 180);
-  //   return t => `rotate(${k(t)}, ${(d.x + d.parent.x) / 2}, ${(d.y + d.parent.y) / 2})`;
-  // });
+    .duration(duration);
 
   // Transition exiting link text to the parent's new position.
   linktext.exit()
