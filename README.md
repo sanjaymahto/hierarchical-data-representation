@@ -8,18 +8,31 @@ Hierarchical data representation using Directed Acyclic Graph (DAG).
 Create an instance
 
     // The mount point is an normal HTMLElement (div, span). The mount point height
-    // and width is already set using css.
+    // and width is already set using css or you can assign also.
     const dagFn = dag(mount/* dom node */)
+                or
+    const dagFn = dag('body', {
+    top: 50, right: 90, bottom: 30, left: 500,
+    }, 960, 500, 30);
+
 
 Feed data
-
+ 
+    //Load CSV or JSON data.
+    //configuration of nodes are optional like nodes color.
+    let data = `parent,child,text,textPath
+    null,India,parent
+    India,East India,child1,child of India
+    India,West India
+    India,South India
+    India,North India`; 
     const instance = dagFn(
     	data, 
-    	config /* configuration attr for each node, if not passed use default */
-    )
+    	config )/* configuration attr for each node, if not passed use default */ 
 
 Render
 
+    // api to render the tree
     instance.render()
 
 Collapse levels
@@ -69,5 +82,5 @@ NPM
     2.)Run `npm run test` command in the terminal.
 ```
 ## Result Image
-![alt_text](https://i.imgur.com/NJXmfnj.png)
+![alt_text](https://i.imgur.com/2vvFuhQ.png)
 
