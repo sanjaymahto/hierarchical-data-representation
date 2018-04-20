@@ -92,7 +92,12 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
     .attr('dy', '.35em')
     .attr('x', d => (d.children || d._children ? -0 : 0))
     .attr('text-anchor', d => (d.children || d._children ? 'end' : 'start'))
-    .text(d => d.data.child)
+    .text((d) => {
+      if (d.data.text) {
+        return d.data.text;
+      }
+      return d.data.child;
+    })
     .attr('text-anchor', 'middle')
     .style('fill-opacity', 1);
 
@@ -166,13 +171,18 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
     .style('text-anchor', 'middle') // place the text halfway on the arc
     .on('mouseover', (d) => {
       let arcLength = Math.sqrt((((d.x - d.parent.x) ** 2) + ((d.y - d.parent.y) ** 2)));
-      let str = `Child Of Child Of ${d.data.parent}`;
+      let str;
+      if (d.data.textPath) {
+        str = d.data.textPath;
+      } else {
+        str = `Child Of ${d.data.parent}`;
+      }
       let strlen = str.length;
       if ((arcLength - nodeSize) < (strlen * 8)) {
         div.transition()
           .duration(200)
           .style('display', 'block');
-        div.html(`child of Child Of ${d.data.parent}`)
+        div.html(`${str}`)
           .style('left', `${d3.event.pageX - 70}px`)
           .style('top', `${d3.event.pageY - 10}px`);
       }
@@ -188,7 +198,12 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
     .attr('xlink:href', d => `#edgePath${d.id}`)
     .text((d) => {
       let arcLength = Math.sqrt((((d.x - d.parent.x) ** 2) + ((d.y - d.parent.y) ** 2)));
-      let str = `Child Of Child Of ${d.data.parent}`;
+      let str;
+      if (d.data.textPath) {
+        str = d.data.textPath;
+      } else {
+        str = `Child Of ${d.data.parent}`;
+      }
       let strlen = str.length;
       if ((arcLength - nodeSize) < (strlen * 8)) {
         let changedStr = str.substring(0, ((arcLength - nodeSize - 4) / 8));
@@ -207,7 +222,12 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
     .attr('xlink:href', d => `#edgePath${d.id}`)
     .text((d) => {
       let arcLength = Math.sqrt((((d.x - d.parent.x) ** 2) + ((d.y - d.parent.y) ** 2)));
-      let str = `Child Of Child Of ${d.data.parent}`;
+      let str;
+      if (d.data.textPath) {
+        str = d.data.textPath;
+      } else {
+        str = `Child Of ${d.data.parent}`;
+      }
       let strlen = str.length;
       if ((arcLength - nodeSize) < (strlen * 8)) {
         let changedStr = str.substring(0, ((arcLength - nodeSize - 4) / 8));
