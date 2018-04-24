@@ -1,7 +1,4 @@
 import * as d3 from 'd3';
-import { config } from './data-loader';
-import { mountConfig } from './dag';
-
 /**
  * @description Creates a curved (diagonal) path from parent to the child nodes
  * @param  {} s
@@ -31,14 +28,14 @@ function diagonal(s, d) {
  * @param  {} renderTreemap // tree layout based on tree data or node data
  * @param  {} nodeSize // node size
  */
-export default function updateNode(rendersvg, root, rootElement, renderTreemap, nodeSize) {
+export default function createDag(rendersvg, root, rootElement, renderTreemap, config) {
   let i = 0;
   let treeData;
   const duration = 500;
   const source = rootElement;
 
   // Creating Div element for tooltip
-  let div = d3.select(mountConfig.divElement).append('div')
+  let div = d3.select(config.mount).append('div')
     .attr('class', 'tooltip')
     .style('display', 'none');
 
@@ -69,14 +66,14 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
           d.children = d._children;
           d._children = null;
         }
-        updateNode(rendersvg, root, d, renderTreemap, nodeSize);
+        createDag(rendersvg, root, d, renderTreemap, config);
       }
     });
 
   // Add Circle for the nodes
   nodeEnter.append('circle')
     .attr('class', 'node')
-    .attr('r', nodeSize)
+    .attr('r', config.nodeSize)
     .style('fill', (d) => {
       if (d.parent === undefined || d.parent === null || d.parent === 'null') {
         return config.rootColor;
@@ -111,7 +108,7 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
 
   // Update the node attributes and style
   nodeUpdate.select('circle.node')
-    .attr('r', nodeSize)
+    .attr('r', config.nodeSize)
     .style('fill', (d) => {
       if (d.parent === undefined || d.parent === null || d.parent === 'null') {
         return config.rootColor;
@@ -178,7 +175,7 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
         str = `Child Of ${d.data.parent}`;
       }
       let strlen = str.length;
-      if ((arcLength - nodeSize) < (strlen * 8)) {
+      if ((arcLength - config.nodeSize) < (strlen * 8)) {
         div.transition()
           .duration(200)
           .style('display', 'block');
@@ -205,8 +202,8 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
         str = `Child Of ${d.data.parent}`;
       }
       let strlen = str.length;
-      if ((arcLength - nodeSize) < (strlen * 8)) {
-        let changedStr = str.substring(0, ((arcLength - nodeSize - 4) / 8));
+      if ((arcLength - config.nodeSize) < (strlen * 8)) {
+        let changedStr = str.substring(0, ((arcLength - config.nodeSize - 4) / 8));
         changedStr += '...';
         return changedStr;
       }
@@ -229,8 +226,8 @@ export default function updateNode(rendersvg, root, rootElement, renderTreemap, 
         str = `Child Of ${d.data.parent}`;
       }
       let strlen = str.length;
-      if ((arcLength - nodeSize) < (strlen * 8)) {
-        let changedStr = str.substring(0, ((arcLength - nodeSize - 4) / 8));
+      if ((arcLength - config.nodeSize) < (strlen * 8)) {
+        let changedStr = str.substring(0, ((arcLength - config.nodeSize - 4) / 8));
         changedStr += '...';
         return changedStr;
       }

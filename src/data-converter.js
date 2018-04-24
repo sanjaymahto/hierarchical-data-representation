@@ -1,8 +1,3 @@
-import Graph from './data-renderer';
-
-let adgData; // variable to store the tree structured data.
-let config; // Nodes configuration like color and root.
-let csvData; // CSV to JSON converted data or JSON data if not CSV.
 /**
  * @description Function to convert the CSV data to JSON tree structure.
  * @param  {} data - take CSV data File or JSON data.
@@ -12,11 +7,10 @@ let csvData; // CSV to JSON converted data or JSON data if not CSV.
  * @param  {'#E9C9C9'} rootColor - root node color.
  * @param  {} object - returns object}
  */
-const loadData = (data, conf = {
-  parentColor: '#F7C7C5', childColor: '#FFE2C5', rootColor: '#E9C9C9',
-}) => {
-  config = conf;
+export default function convertData(data) {
   let result = [];
+  let adgData = [];
+  let csvData = [];
   if (typeof (data) === 'string') {
     const lines = data.split('\n');
     const headers = lines[0].split(',');
@@ -54,10 +48,6 @@ const loadData = (data, conf = {
       adgData.push(node);
     }
   });
-  // console.log('Adg data :', adgData);
-  return new Graph();
-};
-
-export default loadData;
-export { config, adgData, csvData };
+  return { csvData, adgData };
+}
 

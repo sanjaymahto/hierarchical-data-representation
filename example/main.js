@@ -20,5 +20,5 @@ Bengaluru,Kormangala
 North India,Delhi
 Delhi,Karol Bagh
 Pune,Khadakwasla
-Kolkata,Salt Lake`);
+Kolkata,Salt Lake`,{parentColor: 'green'});
 instance.render();
