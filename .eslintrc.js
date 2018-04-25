@@ -7,6 +7,7 @@ module.exports = {
         "no-underscore-dangle": 0,
         "prefer-const": 0,
         "max-len": 0,
+        "no-bitwise":0
     },
     "env": {
         "browser": true,

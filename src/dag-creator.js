@@ -41,7 +41,6 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
 
   // Assigns the x and y position for the nodes
   treeData = renderTreemap(root);
-
   // Compute the new tree layout.
   const nodes = treeData.descendants();
   const links = treeData.descendants().slice(1);
@@ -56,45 +55,57 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
   // Enter any new nodes at the parent's previous position.
   const nodeEnter = node.enter().append('g')
     .attr('class', 'node')
-    .attr('transform', () => `translate(${source.x0},${source.y0})`)
-    .on('click', (d) => {
-      if (d.depth !== 0) {
-        if (d.children) {
-          d._children = d.children;
-          d.children = null;
-        } else {
-          d.children = d._children;
-          d._children = null;
-        }
-        createDag(rendersvg, root, d, renderTreemap, config);
-      }
-    });
+    .attr('transform', () => `translate(${source.x0},${source.y0})`);
 
-  // Add Circle for the nodes
-  nodeEnter.append('circle')
-    .attr('class', 'node')
-    .attr('r', config.nodeSize)
-    .style('fill', (d) => {
-      if (d.parent === undefined || d.parent === null || d.parent === 'null') {
-        return config.rootColor;
-      }
-      if (d._children === undefined || d._children === null || d._children === '') {
-        return config.childColor;
-      }
-      return config.parentColor;
-    });
+  // Add Circle for the nodes and making it clickable or non-clickable.
+  if (config.foldable) {
+    nodeEnter.append('circle')
+      .attr('class', 'node')
+      .attr('r', config.nodeSize)
+      .style('fill', (d) => {
+        if (d.parent === undefined || d.parent === null) {
+          return config.nodeConfig.rootColor;
+        }
+        if ((d._children === undefined || d._children === null) && (d.children === undefined || d.children === null)) {
+          return config.nodeConfig.childColor;
+        }
+        return config.nodeConfig.parentColor;
+      })
+      .on('click', (d) => {
+        if (d.depth !== 0) {
+          if (d.children) {
+            d._children = d.children;
+            d.children = null;
+          } else if (d._children) {
+            d.children = d._children;
+            d._children = null;
+          }
+          createDag(rendersvg, root, d, renderTreemap, config);
+        }
+      })
+      .on(config.eventName, config.eventFunc);
+  } else {
+    nodeEnter.append('circle')
+      .attr('class', 'node')
+      .attr('r', config.nodeSize)
+      .style('fill', (d) => {
+        if (d.parent === undefined || d.parent === null) {
+          return config.nodeConfig.rootColor;
+        }
+        if ((d._children === undefined) && (d.children === undefined)) {
+          return config.nodeConfig.childColor;
+        }
+        return config.nodeConfig.parentColor;
+      })
+      .on(config.eventName, config.eventFunc);
+  }
 
   // Add labels for the nodes
   nodeEnter.append('text')
     .attr('dy', '.35em')
     .attr('x', d => (d.children || d._children ? -0 : 0))
     .attr('text-anchor', d => (d.children || d._children ? 'end' : 'start'))
-    .text((d) => {
-      if (d.data.text) {
-        return d.data.text;
-      }
-      return d.data.child;
-    })
+    .text(config.nameFunc)
     .attr('text-anchor', 'middle')
     .style('fill-opacity', 1);
 
@@ -111,12 +122,12 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
     .attr('r', config.nodeSize)
     .style('fill', (d) => {
       if (d.parent === undefined || d.parent === null || d.parent === 'null') {
-        return config.rootColor;
+        return config.nodeConfig.rootColor;
       }
-      if (d._children === undefined || d._children === null || d._children === '') {
-        return config.childColor;
+      if ((d._children === undefined) && (d.children === undefined)) {
+        return config.nodeConfig.childColor;
       }
-      return config.parentColor;
+      return config.nodeConfig.parentColor;
     })
     .attr('cursor', 'pointer');
 
@@ -130,9 +141,9 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
   const link = rendersvg.selectAll('path.link')
     .data(links, d => d.id);
 
-  // Enter any new links at the parent's previous position.
+    // Enter any new links at the parent's previous position.
   const linkEnter = link.enter().insert('path', 'g')
-    .attr('id', d => `edgePath${d.id}`)
+    .attr('id', d => `${d.data.name}${d.id}`)
     .attr('class', 'link')
     .attr('d', () => {
       let o = { x: source.x0, y: source.y0 };
@@ -143,7 +154,7 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
       return path;
     });
 
-  // UPDATE
+    // UPDATE
   const linkUpdate = linkEnter.merge(link);
 
   // Transition back to the parent element position
@@ -162,7 +173,7 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
   let linketextEnter = linktext.enter().append('g')
     .attr('class', 'link');
 
-  // Add arc text for the nodes
+    // Add arc text for the nodes
   linketextEnter.append('text')
     .attr('dy', '-.25em')
     .style('text-anchor', 'middle') // place the text halfway on the arc
@@ -192,7 +203,7 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
     .append('textPath')
     .attr('class', 'textpath')
     .attr('startOffset', '50%')
-    .attr('xlink:href', d => `#edgePath${d.id}`)
+    .attr('xlink:href', d => `${d.data.name}${d.id}`)
     .text((d) => {
       let arcLength = Math.sqrt((((d.x - d.parent.x) ** 2) + ((d.y - d.parent.y) ** 2)));
       let str;
@@ -216,7 +227,7 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
   linkTextUpdate.selectAll('textPath')
     .attr('class', 'textpath')
     .attr('startOffset', '50%')
-    .attr('xlink:href', d => `#edgePath${d.id}`)
+    .attr('xlink:href', d => `#${d.data.name}${d.id}`)
     .text((d) => {
       let arcLength = Math.sqrt((((d.x - d.parent.x) ** 2) + ((d.y - d.parent.y) ** 2)));
       let str;

@@ -27,6 +27,8 @@ export default function convertData(data) {
     csvData = data;
     result = data;
   }
+  console.log('CSV data: ', csvData);
+
   // *********** Convert flat data into a nice tree *************** //
   // create a name: node map
   const dataMap = result.reduce((map, node) => {
@@ -48,6 +50,7 @@ export default function convertData(data) {
       adgData.push(node);
     }
   });
+  console.log('adgData: ', adgData);
   return { csvData, adgData };
 }
 

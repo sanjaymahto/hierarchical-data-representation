@@ -30,7 +30,7 @@ let collapseExpand = (() => {
  */
   let collapseLevelWithSibling = (d, level, siblingArray) => {
     if (d.children && d.depth === level) {
-      if (siblingArray[countc] === d.data.child) {
+      if (siblingArray[countc] === d.parent.children.indexOf(d)) {
         countc += 1;
         d._children = d.children;
         d._children.forEach((dcol) => {
@@ -78,7 +78,7 @@ let collapseExpand = (() => {
   let expandLevelWithSiblings = (d, level, siblingArray, iscollapsed) => {
     if (iscollapsed === true) {
       if (d._children && d.depth === level) {
-        if (siblingArray[counte] === d.data.child) {
+        if (siblingArray[counte] === d.parent.children.indexOf(d)) {
           counte += 1;
           d.children = d._children;
           d.children.forEach(expandLevelWithSiblings);
@@ -88,15 +88,17 @@ let collapseExpand = (() => {
         d.children.forEach(expandLevelWithSiblings);
       }
     } else if (d._children && d.depth >= level) {
-      if (siblingArray[counte] === d.data.child) {
+      if (siblingArray[counte] === d.parent.children.indexOf(d)) {
         counte += 1;
         d.children = d._children;
-        d.children.forEach(expandLevel, level);
+        // d.children.forEach(expandLevel, level);
+        d.children.forEach(expandLevelWithSiblings);
         d._children = null;
       } else if (d.children) { d.children.forEach(expandLevelWithSiblings); }
     } else if (d.children) {
       d.children.forEach(expandLevelWithSiblings);
     }
+    console.log('return d for expand level with siblings: ', d);
     return d;
   };
   /**

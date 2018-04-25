@@ -10,29 +10,26 @@ class DAG {
   /**
    * @description constructor defined for Graph class.
    */
-  constructor(mount, data, csvData, config) {
+  constructor(mount, data, config) {
     this.divElement = mount;
-    this.config = Object.assign({}, config, { parentColor: '#F7C7C5', childColor: '#FFE2C5', rootColor: '#E9C9C9' }); // To assign the parent, root and child color to the nodes.
+    this.config = Object.assign({}, elemConfig, config); // To assign config to the nodes and DAG.
     this.adgData = data; // To add the adg Data.
-    this.csvData = csvData; // To add flat JSON data.
   }
   /**
    * @description Function to render the tree
    */
   render() {
-    let treeData;
-    treeData = [...(this.adgData)];
     // append the svg object to the body of the page
     this.svg = d3.select(this.divElement).append('svg')
-      .attr('width', elemConfig.width + elemConfig.margin.right + elemConfig.margin.left)
-      .attr('height', elemConfig.height + elemConfig.margin.top + elemConfig.margin.bottom)
+      .attr('width', this.config.width + this.config.margin.right + this.config.margin.left)
+      .attr('height', this.config.height + this.config.margin.top + this.config.margin.bottom)
       .append('g')
-      .attr('transform', `translate(${elemConfig.margin.left},${elemConfig.margin.top})`);
-
+      .attr('transform', `translate(${this.config.margin.left},${this.config.margin.top})`);
     const rendersvg = this.svg;
+
     // Assigns parent, children, height, depth
-    this.root = d3.hierarchy(treeData[0], d => d.children);
-    this.root.y0 = elemConfig.height / 2;
+    this.root = d3.hierarchy(this.adgData, d => d[this.config.children]);
+    this.root.y0 = this.config.height / 2;
     this.root.x0 = 0;
     const rootElement = this.root;
 
@@ -42,7 +39,7 @@ class DAG {
       .separation((a, b) => (a.parent === b.parent ? 3 : 3));
     const renderTreemap = this.treemap;
 
-    this.config.nodeSize = elemConfig.nodeSize;
+    this.config.nodeSize = this.config.nodeSize;
     this.config.mount = this.divElement;
     // to update the node
     createDag(rendersvg, this.root, rootElement, renderTreemap, this.config);
@@ -52,63 +49,18 @@ class DAG {
    * @param  {} newData
    */
   updateData(newData) {
-    if (this.updatedResult === '' || this.updatedResult === undefined) {
-      this.updatedResult = [...this.csvData];
-    }
-    if (typeof (newData) === 'string') {
-      const lines = newData.split('\n');
-      const headers = lines[0].split(',');
-      for (let i = 1; i < lines.length; i += 1) {
-        const obj = {};
-        const currentline = lines[i].split(',');
-        for (let j = 0; j < headers.length; j += 1) {
-          obj[headers[j]] = currentline[j];
-        }
-        this.updatedResult.push(obj);
-      }
-    } else {
-      newData.forEach((element) => {
-        this.updatedResult.push(element);
-      });
-    }
-
-    this.updatedResult.forEach((v) => { delete v.children; });
-
-    // *********** Convert flat data into a nice tree *************** //
-    // create a name: node map
-    const dataMap = this.updatedResult.reduce((map, node) => {
-      map[node.child] = node;
-      return map;
-    }, {});
-
-    // create the tree array
-    this.updatedData = [];
-    this.updatedResult.forEach((node) => {
-      // add to parent
-      const parent = dataMap[node.parent];
-      if (parent) {
-        // create child array if it doesn't exist
-        (parent.children || (parent.children = []))
-          // add node to child array
-          .push(node);
-      } else {
-        // parent is null or missing
-        this.updatedData.push(node);
-      }
-    });
-
+    this.adgData = newData;
     // recreating the tree and Assigning parent, children, height, depth
-    this.root = d3.hierarchy(this.updatedData[0], d => d.children);
-    this.root.y0 = elemConfig.height / 2;
+    this.root = d3.hierarchy(this.adgData, d => d[this.config.children]);
+    this.root.y0 = this.config.height / 2;
     this.root.x0 = 0;
     const rootElement = this.root;
-
-    this.config.nodeSize = elemConfig.nodeSize;
+    this.config.nodeSize = this.config.nodeSize;
     this.config.mount = this.divElement;
-    // to update the node
+    // to update the node.
     createDag(this.svg, this.root, rootElement, this.treemap, this.config);
-    this.collapse(0); // functions to collapse the tree
-    this.expand(0); // function to expand the tree
+    this.collapse(0); // to collapse the tree.
+    this.expand(0); // to expand the tree.
   }
   /**
    * @description function to collapse the tree node.
@@ -170,6 +122,28 @@ class DAG {
       });
       collapseExpand.convertvalueToDefault();
     }
+  }
+  /**
+   * @description function to assign name to each node.
+   * @param  {} nameFunc //Function as an argument.
+   */
+  nodeName(nameFunc) {
+    this.config.nameFunc = nameFunc;
+    createDag(this.svg, this.root, this.root, this.treemap, this.config);
+    this.collapse(0); // to collapse the tree.
+    this.expand(0); // to expand the tree.
+  }
+  /**
+   * @description function to add event listeners to the node in tree.
+   * @param  {} event
+   * @param  {} func
+   */
+  on(event, func) {
+    this.config.eventName = event;
+    this.config.eventFunc = func;
+    createDag(this.svg, this.root, this.root, this.treemap, this.config);
+    this.collapse(0); // to collapse the tree.
+    this.expand(0); // to expand the tree.
   }
 }
 
