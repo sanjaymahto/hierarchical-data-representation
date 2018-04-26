@@ -12,9 +12,6 @@ const elemConfig = {
   children: 'children',
   foldable: false,
   nameFunc(d) {
-    if (d.parent === undefined || d.parent === null) {
-      return 'Root';
-    }
     return '';
   },
   eventFunc: [],

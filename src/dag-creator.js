@@ -71,9 +71,12 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
       return config.nodeConfig.parentColor;
     });
 
+  // UPDATE
+  const nodeUpdate = nodeEnter.merge(node);
+
   // condition to add click event listener to the node if foldable is true.
   if (config.foldable) {
-    nodeEnter.on('click', (d) => {
+    nodeUpdate.on('click', (d) => {
       if (d.children) {
         d._children = d.children;
         d.children = null;
@@ -92,21 +95,20 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
   // if consition for custom events in the nodes.
   if (config.eventFunc.length !== 0) {
     config.eventFunc.forEach((event) => {
-      nodeEnter.on(event.eventName, event.eventFunc);
+      nodeUpdate.on(event.eventName, event.eventFunc);
     });
   }
 
-  // Add labels for the nodes
-  nodeEnter.append('text')
+
+  // update labels of the nodes
+  nodeUpdate.selectAll('text').remove();
+  nodeUpdate.append('text')
     .attr('dy', '.35em')
     .attr('x', d => (d.children || d._children ? -0 : 0))
     .attr('text-anchor', d => (d.children || d._children ? 'end' : 'start'))
     .text(config.nameFunc)
     .attr('text-anchor', 'middle')
     .style('fill-opacity', 1);
-
-  // UPDATE
-  const nodeUpdate = nodeEnter.merge(node);
 
   // Transition to the proper position for the node
   nodeUpdate.transition()

@@ -129,7 +129,8 @@ class DAG {
    */
   nodeName(nameFunc) {
     this.config.nameFunc = nameFunc;
-    createDag(this.svg, this.root, this.root, this.treemap, this.config);
+    const rootElement = this.root;
+    createDag(this.svg, this.root, rootElement, this.treemap, this.config);
     this.collapse(0); // to collapse the tree.
     this.expand(0); // to expand the tree.
   }
