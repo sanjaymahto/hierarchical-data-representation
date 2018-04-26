@@ -58,46 +58,40 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
     .attr('transform', () => `translate(${source.x0},${source.y0})`);
 
   // Add Circle for the nodes and making it clickable or non-clickable.
+  nodeEnter.append('circle')
+    .attr('class', 'node')
+    .attr('r', config.nodeSize)
+    .style('fill', (d) => {
+      if (d.parent === undefined || d.parent === null) {
+        return config.nodeConfig.rootColor;
+      }
+      if ((d._children === undefined || d._children === null) && (d.children === undefined || d.children === null)) {
+        return config.nodeConfig.childColor;
+      }
+      return config.nodeConfig.parentColor;
+    });
+
+  // condition to add click event listener to the node if foldable is true.
   if (config.foldable) {
-    nodeEnter.append('circle')
-      .attr('class', 'node')
-      .attr('r', config.nodeSize)
-      .style('fill', (d) => {
-        if (d.parent === undefined || d.parent === null) {
-          return config.nodeConfig.rootColor;
+    nodeEnter.on('click', (d) => {
+      if (d.depth !== 0) {
+        if (d.children) {
+          d._children = d.children;
+          d.children = null;
+        } else if (d._children) {
+          d.children = d._children;
+          d._children = null;
         }
-        if ((d._children === undefined || d._children === null) && (d.children === undefined || d.children === null)) {
-          return config.nodeConfig.childColor;
-        }
-        return config.nodeConfig.parentColor;
-      })
-      .on('click', (d) => {
-        if (d.depth !== 0) {
-          if (d.children) {
-            d._children = d.children;
-            d.children = null;
-          } else if (d._children) {
-            d.children = d._children;
-            d._children = null;
-          }
-          createDag(rendersvg, root, d, renderTreemap, config);
-        }
-      })
-      .on(config.eventName, config.eventFunc);
-  } else {
-    nodeEnter.append('circle')
-      .attr('class', 'node')
-      .attr('r', config.nodeSize)
-      .style('fill', (d) => {
-        if (d.parent === undefined || d.parent === null) {
-          return config.nodeConfig.rootColor;
-        }
-        if ((d._children === undefined) && (d.children === undefined)) {
-          return config.nodeConfig.childColor;
-        }
-        return config.nodeConfig.parentColor;
-      })
-      .on(config.eventName, config.eventFunc);
+        createDag(rendersvg, root, d, renderTreemap, config);
+      }
+    });
+  }
+
+  // if consition for custom events in the nodes.
+  if (config.eventFunc.length !== 0) {
+    config.eventFunc.forEach((event) => {
+      nodeEnter.on(event.eventName, event.eventFunc);
+    });
   }
 
   // Add labels for the nodes
@@ -180,10 +174,14 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
     .on('mouseover', (d) => {
       let arcLength = Math.sqrt((((d.x - d.parent.x) ** 2) + ((d.y - d.parent.y) ** 2)));
       let str;
-      if (d.data.textPath) {
-        str = d.data.textPath;
+      if (config.pathKey) {
+        if (d.data[config.pathKey]) {
+          str = d.data[config.pathKey];
+        } else {
+          str = '';
+        }
       } else {
-        str = `Child Of ${d.data.parent}`;
+        str = '';
       }
       let strlen = str.length;
       if ((arcLength - config.nodeSize) < (strlen * 8)) {
@@ -207,10 +205,14 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
     .text((d) => {
       let arcLength = Math.sqrt((((d.x - d.parent.x) ** 2) + ((d.y - d.parent.y) ** 2)));
       let str;
-      if (d.data.textPath) {
-        str = d.data.textPath;
+      if (config.pathKey) {
+        if (d.data[config.pathKey]) {
+          str = d.data[config.pathKey];
+        } else {
+          str = '';
+        }
       } else {
-        str = `Child Of ${d.data.parent}`;
+        str = '';
       }
       let strlen = str.length;
       if ((arcLength - config.nodeSize) < (strlen * 8)) {
@@ -231,10 +233,14 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
     .text((d) => {
       let arcLength = Math.sqrt((((d.x - d.parent.x) ** 2) + ((d.y - d.parent.y) ** 2)));
       let str;
-      if (d.data.textPath) {
-        str = d.data.textPath;
+      if (config.pathKey) {
+        if (d.data[config.pathKey]) {
+          str = d.data[config.pathKey];
+        } else {
+          str = '';
+        }
       } else {
-        str = `Child Of ${d.data.parent}`;
+        str = '';
       }
       let strlen = str.length;
       if ((arcLength - config.nodeSize) < (strlen * 8)) {

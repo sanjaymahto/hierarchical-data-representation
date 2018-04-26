@@ -12,11 +12,12 @@ const elemConfig = {
   children: 'children',
   foldable: false,
   nameFunc(d) {
-    if (d.parent == null) {
+    if (d.parent === undefined || d.parent === null) {
       return 'Root';
     }
-    return null;
+    return '';
   },
+  eventFunc: [],
 };
 
 export { elemConfig as default };

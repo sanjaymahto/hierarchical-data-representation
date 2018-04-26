@@ -134,16 +134,44 @@ class DAG {
     this.expand(0); // to expand the tree.
   }
   /**
-   * @description function to add event listeners to the node in tree.
-   * @param  {} event
-   * @param  {} func
+   * @description function to assign names to each paths.
+   * @param  {} pathKey //identifier for textPath.
    */
-  on(event, func) {
-    this.config.eventName = event;
-    this.config.eventFunc = func;
+  pathName(pathKey) {
+    this.config.pathKey = pathKey;
     createDag(this.svg, this.root, this.root, this.treemap, this.config);
     this.collapse(0); // to collapse the tree.
     this.expand(0); // to expand the tree.
+  }
+  /**
+   * @description function to add event listeners to the node in tree.
+   * @param  {} event // event Name
+   * @param  {} func // event Fucntion
+   */
+  on(event, func) {
+    let tempEvent = {
+      eventName: event,
+      eventFunc: func,
+    };
+    this.config.eventFunc.push(tempEvent);
+    createDag(this.svg, this.root, this.root, this.treemap, this.config);
+    this.collapse(0); // to collapse the tree.
+    this.expand(0); // to expand the tree.
+  }
+  /**
+   * @description function to remove event listeners from nodes.
+   * @param  {} eventArray //Array of event Names
+   */
+  removeEvent(eventArray) {
+    if (eventArray) {
+      eventArray.forEach((event) => {
+        this.svg.selectAll('g.node').on(event, null);
+      });
+    } else {
+      this.config.eventFunc.forEach((event) => {
+        this.svg.selectAll('g.node').on(event.eventName, null);
+      });
+    }
   }
 }
 
