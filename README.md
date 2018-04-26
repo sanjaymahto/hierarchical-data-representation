@@ -11,49 +11,78 @@ Create an instance
     // and width is already set using css or you can assign also.
     const dagFn = dag(mount/* dom node */)
                 or
-    const dagFn = dag('body', {
-    top: 50, right: 90, bottom: 30, left: 500,
-    }, 960, 500, 30);
+    const dagFn = dag('#chart');
 
 
 Feed data
  
-    //Load CSV or JSON data.
-    //configuration of nodes are optional like nodes color.
-    let data = `parent,child,text,textPath
-    null,India,parent
-    India,East India,child1,child of India
-    India,West India
-    India,South India
-    India,North India`; 
+    //Pass Nested JSON Data.
+    // sample input data
+    let data = "nodeid": "1",  "nodename": "India",  "extarinfo": {},  
+    "children": [{"nodeid": "2","nodename": "Sandeep",      
+    "extarinfo": {}, "children": []},{"nodeid": "3",      
+    "nodename": "Sanjay", "extarinfo": {}, "children": []},    
+    {"nodeid": "4", "nodename": "Rousan","extarinfo": {},      
+    "children": []}]};
+
+    // config of the dag
+    let config = {    
+    // dimenstions, position and cosmetic config    
+    // foldable or not    
+    // data children property name (default: children)    
+    // etc.}
     const instance = dagFn(
     	data, 
     	config )/* configuration attr for each node, if not passed use default */ 
 
-Render
+Render DAG Tree
 
-    // api to render the tree
+    // api to render the DAG tree
     instance.render()
 
 Collapse levels
 
     instance.collapse(
     	2 /* collapse after two level */, 
-    	['East','West'] /* collapse only these siblings, if not provided collapse every siblings */
+    	[0,1] /* collapse only these siblings, starting from left, if not provided collapse every siblings */
     )
 
 Expand levels
 
     instance.expand(
     	2 /* expand level */, 
-    	['East','West'] /* collapse only these siblings, if not provided collapse every siblings */, 
-    	true /* if all the level after this level should be collapsed, default false */
+    	[0,1] /* expand only these siblings, starting from left, if not provided expand every siblings */
     )
 
-Update data. Should update the data only, keeps everything else same.
+Update data ( Should update the data only, keeps everything else same.)
 
-    instance.updateData(newData) /* new Data should be in CSV or JSON format same as uploaded while 
-    creating an Instance*/
+    instance.updateData(newData) /* new Data should be in tree 
+    JSON format same as uploaded while creating an Instance*/
+
+Naming The Nodes of Tree
+
+    // argument of nodeName should be function type
+    instance.nodeName((currentNode) => { 
+        return currentNode.nodeid; }); // nodeid is identifier here from the JSON tree data provided.
+
+Naming The paths of nodes
+
+    // argument of pathName should be string type i.e identifier key from the JSON tree data provided.
+    instance.pathName('textPath'); // textPath is identifier here from the JSON tree data provided.
+
+Adding Event listeners to the nodes
+
+    // ataching event listener
+    instance.on('click', (evt) => {    
+      let nodeid = evt.node.nodeid;   
+       // do something else});
+
+Removing Event listeners from the nodes
+
+    // Removing event listener
+    instance.removeEvent(); // To remove all the Events.
+                or
+    instance.removeEvent(['click','mouseover']); // To remove click and mouseover events from nodes.
 
 ## Prerequisites
 
