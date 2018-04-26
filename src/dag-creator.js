@@ -74,14 +74,16 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
   // condition to add click event listener to the node if foldable is true.
   if (config.foldable) {
     nodeEnter.on('click', (d) => {
-      if (d.depth !== 0) {
-        if (d.children) {
-          d._children = d.children;
-          d.children = null;
-        } else if (d._children) {
-          d.children = d._children;
-          d._children = null;
-        }
+      if (d.children) {
+        d._children = d.children;
+        d.children = null;
+      } else if (d._children) {
+        d.children = d._children;
+        d._children = null;
+      }
+      if (d.depth === 0) {
+        createDag(rendersvg, d, d, renderTreemap, config);
+      } else {
         createDag(rendersvg, root, d, renderTreemap, config);
       }
     });
