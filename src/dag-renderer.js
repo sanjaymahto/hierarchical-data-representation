@@ -167,11 +167,20 @@ class DAG {
     if (eventArray) {
       eventArray.forEach((event) => {
         this.svg.selectAll('g.node').on(event, null);
+        let index = this.config.eventFunc.reverse().findIndex(eventObj => eventObj.eventName === event);
+        if (index > -1) {
+          this.config.eventFunc.splice(index, 1);
+        }
       });
+      this.collapse(0); // to collapse the tree.
+      this.expand(0); // to expand the tree.
     } else {
       this.config.eventFunc.forEach((event) => {
         this.svg.selectAll('g.node').on(event.eventName, null);
       });
+      this.config.eventFunc = [];
+      this.collapse(0); // to collapse the tree.
+      this.expand(0); // to expand the tree.
     }
   }
 }
