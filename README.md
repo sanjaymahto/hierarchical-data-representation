@@ -16,6 +16,8 @@ DAG(Directed Acyclic Graph) converter which includes dag, render, collapse, expa
 - [Using collapse API](#using-collapse-api)
 - [Using Expand API](#using-expand-api)
 - [Using UpdateData API](#using-updatedata-api)
+- [Using nodeName API](#using-nodeName-api)
+- [Using pathName API](#using-pathName-api)
 
 
 ### Download
@@ -134,7 +136,7 @@ The [collpase](https://github.com/sanjaymahto/hierarchical-data-representation/b
 >Note: Sibling array should be provided Sequentially in ascending order.
 example: [0,1,2] or [0,4,7,8].
 
-###Using Expand API
+### Using Expand API
 
 The [expand](https://github.com/sanjaymahto/hierarchical-data-representation/blob/origin/feature/refactoring-code/src/collapse-expand-tree.js) API allows you to expand the DAG tree. there are two ways to call this API. first one with only level as a parameter and second is passing level and sibling Array of nodes to collapse. 
 
@@ -150,7 +152,7 @@ The [expand](https://github.com/sanjaymahto/hierarchical-data-representation/blo
 >Note: Sibling array should be provided Sequentially in ascending order.
 example: [0,1,2] or [0,4,7,8].
 
-###Using UpdateData API
+### Using UpdateData API
 
 The [updateData](https://github.com/sanjaymahto/hierarchical-data-representation/blob/origin/feature/refactoring-code/src/dag-renderer.js) API allows you to update the DAG tree.This will update or reduce the node in the tree according to the data provided in the new Nested Tree JSON data. pass new updated Nested tree data as a parameter. It Should update the data only, keeps everything else same.
 
@@ -159,19 +161,30 @@ The [updateData](https://github.com/sanjaymahto/hierarchical-data-representation
     instance.updateData(newData) /* new Data should be in tree JSON format same as 
                                     uploaded while creating an Instance*/
 
-Naming The Nodes of Tree
+### Using nodeName API
+
+The [nodeName](https://github.com/sanjaymahto/hierarchical-data-representation/blob/origin/feature/refactoring-code/src/dag-renderer.js) API allows you to Name the nodes of DAG tree. This will allow you to change the Names of the Nodes dynamically. You have to pass function as a parameter to assign names to the Nodes of the tree.
+
+`Example:`
 
     // argument of nodeName should be function type
-    instance.nodeName((currentNode) => { 
-        return currentNode.data.nodeid; }); /* nodeid is identifier here 
-    from the JSON tree data provided.*/
+          instance.nodeName((currentNode) => { 
+            return currentNode.data.nodeid; }); /* nodeid is identifier here 
+                                              from the JSON tree data provided.*/
 
-Naming The paths of nodes
+>Note: while accessing the data in the JSON structure. you have to put `.data` in the passed element in the function.
+`example:`
+currentNode.data.nodeid
 
-    /* argument of pathName should be string type i.e identifier 
-       key from the JSON tree data provided.*/
-    instance.pathName('textPath'); /* textPath is identifier 
-    here from the JSON tree data provided.*/
+### Using pathName API
+
+The [pathName](https://github.com/sanjaymahto/hierarchical-data-representation/blob/origin/feature/refactoring-code/src/dag-renderer.js) API allows you to Name the paths of DAG tree. This will allow you to change the path names of the Nodes dynamically. You have to pass path identifier key from JSON Data as a parameter.
+
+`Example:`
+
+    /* argument of pathName should be string type i.e identifier key from the JSON    tree data provided.*/
+    
+    instance.pathName('textPath'); /* textPath is identifier here from                                               the JSON tree data provided.*/
 
 Adding Event listeners to the nodes
 
