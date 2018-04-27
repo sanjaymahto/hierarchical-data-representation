@@ -102,7 +102,7 @@ Naming The Nodes of Tree
 
     // argument of nodeName should be function type
     instance.nodeName((currentNode) => { 
-        return currentNode.nodeid; }); /* nodeid is identifier here 
+        return currentNode.data.nodeid; }); /* nodeid is identifier here 
     from the JSON tree data provided.*/
 
 Naming The paths of nodes
@@ -116,7 +116,7 @@ Adding Event listeners to the nodes
 
     // ataching event listener
     instance.on('click', (evt) => {    
-      let nodeid = evt.node.nodeid;   
+      let nodeid = evt.data.nodeid;   
        // do something else});
 
 Removing Event listeners from the nodes
