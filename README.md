@@ -16,8 +16,10 @@ DAG(Directed Acyclic Graph) converter which includes dag, render, collapse, expa
 - [Using collapse API](#using-collapse-api)
 - [Using Expand API](#using-expand-api)
 - [Using UpdateData API](#using-updatedata-api)
-- [Using nodeName API](#using-nodeName-api)
-- [Using pathName API](#using-pathName-api)
+- [Using nodeName API](#using-nodename-api)
+- [Using pathName API](#using-pathname-api)
+- [Using on API](#using-on-api)
+- [Using removeEvent API](#using-removeevent-api)
 
 
 ### Download
@@ -186,19 +188,36 @@ The [pathName](https://github.com/sanjaymahto/hierarchical-data-representation/b
     
     instance.pathName('textPath'); /* textPath is identifier here from                                               the JSON tree data provided.*/
 
-Adding Event listeners to the nodes
+### Using on API
+
+The [on](https://github.com/sanjaymahto/hierarchical-data-representation/blob/origin/feature/refactoring-code/src/dag-renderer.js) API allows you to add events to the nodes of the tree.This will take two parameters i.e event name and event function on that click event.
+
+`Example:`
 
     // ataching event listener
-    instance.on('click', (evt) => {    
-      let nodeid = evt.data.nodeid;   
-       // do something else});
+             instance.on('click', (evt) => {    
+                   let nodeid = evt.data.nodeid;  
+                   console.log(nodeid);
+                   // do something else
+                 });
 
-Removing Event listeners from the nodes
+>Note: If event with same name is created again then the latest event will overwrite the previous event.
 
-    // Removing event listener
-    instance.removeEvent(); // To remove all the Events.
-                or
-    instance.removeEvent(['click','mouseover']); /* To remove click 
-    and mouseover events from nodes.*/
+### Using removeEvent API
+
+The [removeEvent](https://github.com/sanjaymahto/hierarchical-data-representation/blob/origin/feature/refactoring-code/src/dag-renderer.js) API allows you to remove events from the nodes of the tree.There are two ways to remove an Event from the Nodes. first one is to remove all the events on one call. second is to remove selected events.
+
+1. `calling removeEvent API without any parameter`
+    `Example:`
+        
+        instance.removeEvent(); /* Remove all the Events from the nodes.*/
+
+2. `Calling the removeEvent API with event array as a parameter`
+    `Example:`
+        
+        instance.removeEvent(['click', 'mouseover']); /* remove only click and 
+                                                mouseover events from nodes. */
+
+
 
 
