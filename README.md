@@ -16,12 +16,7 @@ DAG(Directed Acyclic Graph) converter which includes dag, render, collapse, expa
 - [Using collapse API](#using-collapse-api)
 - [Using Expand API](#using-expand-api)
 - [Using UpdateData API](#using-updatedata-api)
-  - [RegExp extensions Babel plugin](#regexp-extensions-babel-plugin)
-- [Creating RegExp objects](#creating-regexp-objects)
-- [Executing regexes](#executing-regexes)
-- [Using interpreter API](#using-interpreter-api)
-  - [Printing NFA/DFA tables](#printing-nfadfa-tables)
-- [AST nodes specification](#ast-nodes-specification)
+
 
 ### Download
 
@@ -54,8 +49,7 @@ It returns a function to load Nested Tree JSON data with configuration object as
 
 `Create a mount point for DAG (Directed Acyclic Graph)`
 
-     // The mount point is an normal HTMLElement (div, span). 
-        The mount point height
+     // The mount point is an normal HTMLElement (div, span, id etc.)
                const dagFn = dag('#chart'); 
  `Pass Nested Tree JSON data and configuration Object to returned function to create an Instance of DAG`     
 
@@ -194,32 +188,4 @@ Removing Event listeners from the nodes
     instance.removeEvent(['click','mouseover']); /* To remove click 
     and mouseover events from nodes.*/
 
-## Prerequisites
-
-Git
-
-NodeJs
-
-NPM
-
-## Running
-
-  installing dependencies:
-```
-    1). Unzip the downloaded file.
-    2). Open the extracted folder. 
-    3). Type Command: npm install and press enter. This will install all dependencies shown in package.json file.
-```
-  running project:
-```
-    1). Run `npm run build` command to run webpack to create a build.
-    2). After creating the build Run `npm start` to start the dev-server.
-```
-  Testing Project:
-```
-    1).checkout to unit-tests branch.
-    2.)Run `npm run test` command in the terminal.
-```
-## Result Image
-![alt_text](https://i.imgur.com/2vvFuhQ.png)
 
