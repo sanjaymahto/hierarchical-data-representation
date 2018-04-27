@@ -9,7 +9,7 @@ DAG(Directed Acyclic Graph) converter which includes dag, render, collapse, expa
 
 ### Table of Contents
 
-- [Download](#download)
+- [Installation](#installation)
 - [Development](#development)
 - [Using dag API](#using-dag-api)
 - [Using render API](#using-render-api)
@@ -22,12 +22,13 @@ DAG(Directed Acyclic Graph) converter which includes dag, render, collapse, expa
 - [Using removeEvent API](#using-removeevent-api)
 
 
-### Download
+### Installation
 
  1. Unzip the downloaded file or clone the Repository.
  2. Open the extracted folder or Cloned Repository. 
- 3. Type Command: npm install and press enter. This will 
-      install all dependencies shown in package.json file.
+ 3. Type Command: `npm install` and press enter. This will 
+      install all dependencies shown in `package.json` file.
+4. Type `npm start` to run dev-server or `npm run build` to create the build.
 
 ### Development
 
