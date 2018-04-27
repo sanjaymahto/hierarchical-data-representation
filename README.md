@@ -9,8 +9,8 @@ DAG(Directed Acyclic Graph) converter which includes dag, render, collapse, expa
 
 ### Table of Contents
 
-- [Download](#Download)
-- [Development](#Development)
+- [Download](#download)
+- [Development](#development)
 - [Using dag API](#using-dag-api)
 - [Using render API](#using-render-api)
 - [Using optimizer API](#using-optimizer-api)
