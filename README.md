@@ -134,7 +134,7 @@ The [collpase](https://github.com/sanjaymahto/hierarchical-data-representation/b
 2. `Sending level and sibling node array of that level as parameter`
     `Example:`
         
-        instance.collapse(2 , [0,1,2]); /* collapse only these siblings (i.e                                 childs of that level) starting from left*/
+        instance.collapse(2 , [0,1,2]); /* collapse only these siblings (i.e childs of that level) starting from left*/
 >Note: Sibling array should be provided Sequentially in ascending order.
 example: [0,1,2] or [0,4,7,8].
 
@@ -150,7 +150,7 @@ The [expand](https://github.com/sanjaymahto/hierarchical-data-representation/blo
 2. `Sending level and sibling node array of that level as parameter`
     `Example:`
         
-        instance.expand(2 , [0,1]); /* expand only these siblings (i.e                                 childs of that level) starting from left*/
+        instance.expand(2 , [0,1]); /* expand only these siblings (i.e childs of that level) starting from left*/
 >Note: Sibling array should be provided Sequentially in ascending order.
 example: [0,1,2] or [0,4,7,8].
 
@@ -161,7 +161,7 @@ The [updateData](https://github.com/sanjaymahto/hierarchical-data-representation
 `Example:`
    
     instance.updateData(newData) /* new Data should be in tree JSON format same as 
-                                    uploaded while creating an Instance*/
+                                    uploaded while creating an Instance */
 
 ### Using nodeName API
 
@@ -171,8 +171,7 @@ The [nodeName](https://github.com/sanjaymahto/hierarchical-data-representation/b
 
     // argument of nodeName should be function type
           instance.nodeName((currentNode) => { 
-            return currentNode.data.nodeid; }); /* nodeid is identifier here 
-                                              from the JSON tree data provided.*/
+            return currentNode.data.nodeid; }); /* nodeid is identifier here from the JSON tree data provided.*/
 
 >Note: while accessing the data in the JSON structure. you have to put `.data` in the passed element in the function.
 `example:`
@@ -184,7 +183,7 @@ The [pathName](https://github.com/sanjaymahto/hierarchical-data-representation/b
 
 `Example:`
 
-    /* argument of pathName should be string type i.e identifier key from the JSON    tree data provided.*/
+    /* argument of pathName should be string type i.e identifier key from the JSON tree data provided.*/
     
     instance.pathName('textPath'); /* textPath is identifier here from                                               the JSON tree data provided.*/
 
@@ -218,6 +217,7 @@ The [removeEvent](https://github.com/sanjaymahto/hierarchical-data-representatio
         instance.removeEvent(['click', 'mouseover']); /* remove only click and 
                                                 mouseover events from nodes. */
 
+>Note: If there are multiple events with the same name then, The latest one will be removed first.
 
 
 
