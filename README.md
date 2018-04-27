@@ -13,11 +13,9 @@ DAG(Directed Acyclic Graph) converter which includes dag, render, collapse, expa
 - [Development](#development)
 - [Using dag API](#using-dag-api)
 - [Using render API](#using-render-api)
-- [Using optimizer API](#using-optimizer-api)
-  - [Optimizer ESLint plugin](#optimizer-eslint-plugin)
-- [Using compat-transpiler API](#using-compat-transpiler-api)
-  - [Compat-transpiler Babel plugin](#compat-transpiler-babel-plugin)
-- [RegExp extensions](#regexp-extensions)
+- [Using collapse API](#using-collapse-api)
+- [Using Expand API](#using-expand-api)
+- [Using UpdateData API](#using-updatedata-api)
   - [RegExp extensions Babel plugin](#regexp-extensions-babel-plugin)
 - [Creating RegExp objects](#creating-regexp-objects)
 - [Executing regexes](#executing-regexes)
@@ -41,10 +39,10 @@ DAG(Directed Acyclic Graph) converter which includes dag, render, collapse, expa
 
 For development from the github repository, run `build` command to generate the dag module, and transpile JS code:
  
-    1.)git clone https://github.com/<your-github-account>/hierarchical-data-representation.git
-    2.)cd hierarchical-data-representation
-    3.)npm install
-    4.)npm run build
+    1. git clone https://github.com/<your-github-account>/hierarchical-data-representation.git
+    2. cd hierarchical-data-representation
+    3. npm install
+    4. npm run build
 
 
 ### Using dag API
@@ -56,8 +54,8 @@ It returns a function to load Nested Tree JSON data with configuration object as
 
 `Create a mount point for DAG (Directed Acyclic Graph)`
 
-     // The mount point is an normal HTMLElement (div, span). The 
-       mount point height
+     // The mount point is an normal HTMLElement (div, span). 
+        The mount point height
                const dagFn = dag('#chart'); 
  `Pass Nested Tree JSON data and configuration Object to returned function to create an Instance of DAG`     
 
@@ -119,107 +117,53 @@ It returns a function to load Nested Tree JSON data with configuration object as
     
 ### Using render API
 
-The [render](https://github.com/sanjaymahto/hierarchical-data-representation/blob/origin/feature/refactoring-code/src/dag-renderer.js) API allows you render the DAG graph out of Nested JSON data structure with your passed Configurations like node colors, child key, node-size, DAG graph dimensions and positions, tree foldability.
+The [render](https://github.com/sanjaymahto/hierarchical-data-representation/blob/origin/feature/refactoring-code/src/dag-renderer.js) API allows you to render the DAG graph out of Nested JSON data structure with your passed Configurations like node colors, child key, node-size, DAG graph dimensions and positions, tree foldability.
 
 `Example:` 
 
     // API to render the DAG tree
               instance.render();
    
-## API
+### Using collapse API
 
-Create an instance
+The [collpase](https://github.com/sanjaymahto/hierarchical-data-representation/blob/origin/feature/refactoring-code/src/collapse-expand-tree.js) API allows you to collapse the DAG tree. there are two ways to call this API. first one with only level as a parameter and second is passing level and sibling Array of nodes to collapse. 
 
-    // The mount point is an normal HTMLElement (div, span). The 
-       mount point height
-    // and width is already set using css or you can assign also.
-              const dagFn = dag(mount/* dom node */)
-       Example: const dagFn = dag('#chart'); 
-                                            
+1. `Sending only level as parameter`
+    `Example:`
+        
+        instance.collapse(2); /* collapse DAG tree after second level */
 
-Feed data
+2. `Sending level and sibling node array of that level as parameter`
+    `Example:`
+        
+        instance.collapse(2 , [0,1,2]); /* collapse only these siblings (i.e                                 childs of that level) starting from left*/
+>Note: Sibling array should be provided Sequentially in ascending order.
+example: [0,1,2] or [0,4,7,8].
 
-    //Pass Nested JSON Data.
-    // sample input data
-    let data = {  
-    "nodeid":"1",
-    "nodename":"India",
-    "extarinfo":{},
-    "children":[  
-      {  
-         "nodeid":"2",
-         "nodename":"East",
-         "extarinfo":{},
-         "children":[]
-      },
-      {  
-         "nodeid":"3",
-         "nodename":"West",
-         "extarinfo":{},
-         "children":[]
-      },
-      {  
-         "nodeid":"4",
-         "nodename":"North",
-         "extarinfo":{},
-         "children":[]
-      },
-      {  
-         "nodeid":"5",
-         "nodename":"South",
-         "extarinfo":{},
-         "children":[]
-      }
-    ]};
+###Using Expand API
 
-    // config of the dag
-    let config ={  
-      margin:{  
-        top:50,
-        right:90,
-        bottom:30,
-        left:500,
-      },
-      width:960,
-      height:500,
-      nodeSize:30,
-      nodeConfig:{  
-        parentColor:'red',
-        childColor:'green',
-        rootColor:'blue'
-      },
-      children:'children',
-      foldable:false,
-    };
+The [expand](https://github.com/sanjaymahto/hierarchical-data-representation/blob/origin/feature/refactoring-code/src/collapse-expand-tree.js) API allows you to expand the DAG tree. there are two ways to call this API. first one with only level as a parameter and second is passing level and sibling Array of nodes to collapse. 
 
-    const instance = dagFn( data, config); // Creating an Instance.
+1. `Sending only level as parameter`
+    `Example:`
+        
+        instance.expand(2); /* expand DAG tree after second level */
 
+2. `Sending level and sibling node array of that level as parameter`
+    `Example:`
+        
+        instance.expand(2 , [0,1]); /* expand only these siblings (i.e                                 childs of that level) starting from left*/
+>Note: Sibling array should be provided Sequentially in ascending order.
+example: [0,1,2] or [0,4,7,8].
 
-Render DAG Tree
+###Using UpdateData API
 
-    // api to render the DAG tree
-          instance.render()
+The [updateData](https://github.com/sanjaymahto/hierarchical-data-representation/blob/origin/feature/refactoring-code/src/dag-renderer.js) API allows you to update the DAG tree.This will update or reduce the node in the tree according to the data provided in the new Nested Tree JSON data. pass new updated Nested tree data as a parameter. It Should update the data only, keeps everything else same.
 
-Collapse levels
-
-    instance.collapse(
-    	2 /* collapse after two level */, 
-    	[0,1] /* collapse only these siblings, starting from left, if not 
-                  provided collapse with every sibling*/
-    );
-
-Expand levels
-
-    instance.expand(
-    	2 /* expand level */, 
-    	[0,1] /* expand only these siblings, starting from left, if not 
-                  provided expand every sibling*/
-    )
-
-Update data ( Should update the data only, keeps everything else same.)
-
-    instance.updateData(newData) /* new Data should be in tree 
-    JSON format same as uploaded while creating an Instance*/
+`Example:`
+   
+    instance.updateData(newData) /* new Data should be in tree JSON format same as 
+                                    uploaded while creating an Instance*/
 
 Naming The Nodes of Tree
 
