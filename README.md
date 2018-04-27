@@ -186,7 +186,7 @@ The [pathName](https://github.com/sanjaymahto/hierarchical-data-representation/b
 
     /* argument of pathName should be string type i.e identifier key from the JSON tree data provided.*/
     
-    instance.pathName('textPath'); /* textPath is identifier here from                                               the JSON tree data provided.*/
+    instance.pathName('textPath'); /* textPath is identifier here from the JSON tree data provided.*/
 
 ### Using on API
 
