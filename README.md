@@ -7,51 +7,90 @@ Hierarchical data representation using Directed Acyclic Graph (DAG).
 
 Create an instance
 
-    // The mount point is an normal HTMLElement (div, span). The mount point height
+    // The mount point is an normal HTMLElement (div, span). The 
+       mount point height
     // and width is already set using css or you can assign also.
-    const dagFn = dag(mount/* dom node */)
-                or
-    const dagFn = dag('#chart');
-
+              const dagFn = dag(mount/* dom node */)
+       Example: const dagFn = dag('#chart'); 
+                                            
 
 Feed data
- 
+
     //Pass Nested JSON Data.
     // sample input data
-    let data = "nodeid": "1",  "nodename": "India",  "extarinfo": {},  
-    "children": [{"nodeid": "2","nodename": "Sandeep",      
-    "extarinfo": {}, "children": []},{"nodeid": "3",      
-    "nodename": "Sanjay", "extarinfo": {}, "children": []},    
-    {"nodeid": "4", "nodename": "Rousan","extarinfo": {},      
-    "children": []}]};
+    let data = {  
+    "nodeid":"1",
+    "nodename":"India",
+    "extarinfo":{},
+    "children":[  
+      {  
+         "nodeid":"2",
+         "nodename":"East",
+         "extarinfo":{},
+         "children":[]
+      },
+      {  
+         "nodeid":"3",
+         "nodename":"West",
+         "extarinfo":{},
+         "children":[]
+      },
+      {  
+         "nodeid":"4",
+         "nodename":"North",
+         "extarinfo":{},
+         "children":[]
+      },
+      {  
+         "nodeid":"5",
+         "nodename":"South",
+         "extarinfo":{},
+         "children":[]
+      }
+    ]};
 
     // config of the dag
-    let config = {    
-    // dimenstions, position and cosmetic config    
-    // foldable or not    
-    // data children property name (default: children)    
-    // etc.}
-    const instance = dagFn(
-    	data, 
-    	config )/* configuration attr for each node, if not passed use default */ 
+    let config ={  
+      margin:{  
+        top:50,
+        right:90,
+        bottom:30,
+        left:500,
+      },
+      width:960,
+      height:500,
+      nodeSize:30,
+      nodeConfig:{  
+        parentColor:'red',
+        childColor:'green',
+        rootColor:'blue'
+      },
+      children:'children',
+      foldable:false,
+    };
+
+    const instance = dagFn( data, config); // Creating an Instance.
+
 
 Render DAG Tree
 
     // api to render the DAG tree
-    instance.render()
+          instance.render()
 
 Collapse levels
 
     instance.collapse(
     	2 /* collapse after two level */, 
-    	[0,1] /* collapse only these siblings, starting from left, if not provided collapse every siblings */
-    )
+    	[0,1] /* collapse only these siblings, starting from left, if not 
+                  provided collapse with every sibling*/
+    );
 
 Expand levels
 
     instance.expand(
     	2 /* expand level */, 
-    	[0,1] /* expand only these siblings, starting from left, if not provided expand every siblings */
+    	[0,1] /* expand only these siblings, starting from left, if not 
+                  provided expand every sibling*/
     )
 
 Update data ( Should update the data only, keeps everything else same.)
@@ -63,12 +102,15 @@ Naming The Nodes of Tree
 
     // argument of nodeName should be function type
     instance.nodeName((currentNode) => { 
-        return currentNode.nodeid; }); // nodeid is identifier here from the JSON tree data provided.
+        return currentNode.nodeid; }); /* nodeid is identifier here 
+    from the JSON tree data provided.*/
 
 Naming The paths of nodes
 
-    // argument of pathName should be string type i.e identifier key from the JSON tree data provided.
-    instance.pathName('textPath'); // textPath is identifier here from the JSON tree data provided.
+    /* argument of pathName should be string type i.e identifier 
+       key from the JSON tree data provided.*/
+    instance.pathName('textPath'); /* textPath is identifier 
+    here from the JSON tree data provided.*/
 
 Adding Event listeners to the nodes
 
@@ -82,7 +124,8 @@ Removing Event listeners from the nodes
     // Removing event listener
     instance.removeEvent(); // To remove all the Events.
                 or
-    instance.removeEvent(['click','mouseover']); // To remove click and mouseover events from nodes.
+    instance.removeEvent(['click','mouseover']); /* To remove click 
+    and mouseover events from nodes.*/
 
 ## Prerequisites
 
