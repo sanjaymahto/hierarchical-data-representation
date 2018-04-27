@@ -1,7 +1,7 @@
 import DAG from './dag-renderer';
 /**
  * @description Function to append SVG element to Selected HTML element.
- * @param  {} mount
+ * @param  {} mount normal HTML Element div, span, id etc.
  */
 export default function dag(mount) {
   if (mount) {

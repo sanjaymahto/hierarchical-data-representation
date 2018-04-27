@@ -93,7 +93,8 @@ let instance = dagFn({
       ]
     }
   ]
-},{
+}, {
+    nodeConfig: { parentColor: 'red', childColor: 'blue', rootColor: 'green' },
     children: 'lanes',
     foldable: true
   });
