@@ -74,6 +74,20 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
   // UPDATE
   const nodeUpdate = nodeEnter.merge(node);
 
+  // Add Circle for the nodes and making it clickable or non-clickable on Updation of node.
+  nodeUpdate.append('circle')
+    .attr('class', 'node')
+    .attr('r', config.nodeSize)
+    .style('fill', (d) => {
+      if (d.parent === undefined || d.parent === null) {
+        return config.nodeConfig.rootColor;
+      }
+      if ((d._children === undefined || d._children === null) && (d.children === undefined || d.children === null)) {
+        return config.nodeConfig.childColor;
+      }
+      return config.nodeConfig.parentColor;
+    });
+
   // condition to add click event listener to the node if foldable is true.
   if (config.foldable) {
     nodeUpdate.on('click', (d) => {
