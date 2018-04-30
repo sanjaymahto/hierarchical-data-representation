@@ -4,28 +4,35 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
     <title>Collapsible Tree Example</title>
     <style>
         .node {
             cursor: pointer;
         }
+
         .node circle {
             fill: #E9C9C9;
             stroke: #8F8F8F;
             stroke-width: 1px;
         }
+
         .node text {
             font: 12px sans-serif;
         }
+
         .link {
             fill: none;
             stroke: black;
             stroke-width: 1px;
         }
+
         .link text {
             font-size: 12px;
             fill: black;
         }
+
         .tooltip {
             position: absolute;
             text-align: center;
@@ -38,14 +45,216 @@
             border-radius: 8px;
             pointer-events: none;
         }
+
+        textarea {
+            overflow-y: scroll;
+            height: 100px;
+            resize: none;
+            /* Remove this if you want the user to resize the textarea */
+        }
     </style>
 </head>
 
 <body>
 
     <div id="dag"></div>
-    <script src="/dag.js"></script>
-    <script src="main.js"></script>
+
+    <div class="container">
+        <div class="row">
+            <div class="text-center col-lg">
+                <h4>Reset the DAG graph</h4>
+                <br/>
+                <button type="button" onclick='reset()'>Reset</button>
+            </div>
+        </div>
+        <br/>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <h4>Add Names to Nodes</h4>
+                    <textarea rows="4" cols="30" disabled>
+instance.nodeName((d) =>{return d.data.nodeid;});
+            </textarea>
+                    <br/>
+                    <button type="button" onclick='addName()'>Execute</button>
+                </div>
+                <div class="col-sm">
+                    <h4>Add path Names to Nodes</h4>
+                    <textarea rows="4" cols="30" disabled>
+instance.pathName('instance', 'pathText');
+            </textarea>
+                    <br/>
+                    <button type="button" onclick='addpathName()'>Execute</button>
+                </div>
+                <div class="col-sm">
+                    <h4>Update DAG Graph</h4>
+                    <textarea rows="6" cols="30" disabled>
+                        instance.updateData({
+                            "host": null,
+                            "cut": "v",
+                            "ratioWeight": 1,
+                            "nodeid": 1,
+                            "pathText": "This is root Node.",
+                            "lanes": [
+                              {
+                                "host": null,
+                                "cut": "h",
+                                "ratioWeight": 1,
+                                "nodeid": 2,
+                                "preferred": true,
+                                "pathText": "This is first Node.",
+                                "lanes": [
+                                  {
+                                    "host": {
+                                      "seed": 10,
+                                      "dimensions": {
+                                        "width": 300,
+                                        "height": 300
+                                      },
+                                      "position": null
+                                    },
+                                    "cut": null,
+                                    "ratioWeight": 1,
+                                    "pathText": "This is third Node.",
+                                    "nodeid": 4,
+                                    "preferred": true,
+                                    "lanes": []
+                                  },
+                                  {
+                                    "host": {
+                                      "seed": 10,
+                                      "dimensions": {
+                                        "width": 300,
+                                        "height": 300
+                                      },
+                                      "position": null
+                                    },
+                                    "cut": null,
+                                    "ratioWeight": 1,
+                                    "pathText": "This is fourth Node.",
+                                    "nodeid": 5,
+                                    "lanes": []
+                                  },
+                                  {
+                                    "host": {
+                                      "seed": 10,
+                                      "dimensions": {
+                                        "width": 300,
+                                        "height": 300
+                                      },
+                                      "position": null
+                                    },
+                                    "cut": null,
+                                    "ratioWeight": 1,
+                                    "pathText": "This is fifth Node.",
+                                    "nodeid": 6,
+                                    "lanes": []
+                                  }
+                                ]
+                              },
+                              {
+                                "host": null,
+                                "cut": "h",
+                                "ratioWeight": 1,
+                                "nodeid": 3,
+                                "pathText": "This is second Node.",
+                                "lanes": [
+                                  {
+                                    "host": {
+                                      "seed": 10,
+                                      "dimensions": {
+                                        "width": 300,
+                                        "height": 300
+                                      },
+                                      "position": null
+                                    },
+                                    "cut": null,
+                                    "ratioWeight": 1,
+                                    "pathText": "This is sixth Node.",
+                                    "nodeid": 7,
+                                    "preferred": true,
+                                    "lanes": []
+                                  }
+                                ]
+                              }
+                            ]
+                          });         
+            </textarea>
+                    <br/>
+                    <button type="button" onclick='updateData()'>Execute</button>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <h4>Add Event listener to nodes</h4>
+                    <textarea rows="4" cols="30" disabled>
+instance.on('click', (d) =>{return alert(d);});
+                </textarea>
+                    <br/>
+                    <button type="button" onclick='addEvent()'>Execute</button>
+                </div>
+                <div class="col-sm">
+                    <h4>Remove All Events from Nodes</h4>
+                    <textarea rows="4" cols="30" disabled>
+instance.removeEvents();
+                </textarea>
+                    <br/>
+                    <button type="button" onclick='removeAllEvents()'>Execute</button>
+                </div>
+                <div class="col-sm">
+                    <h4>Remove selected Events</h4>
+                    <textarea rows="4" cols="30" disabled>
+instance.removeEvents(['click', 'mouseover']);
+                    </textarea>
+                    <br/>
+                    <button type="button" onclick='removeEvents()'>Execute</button>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="text-center col-md-6">
+                    <h4>Collapse DAG tree</h4>
+                    <textarea rows="4" cols="30" disabled>
+instance.collapse(1); // to collpase all nodes in level 1
+                    </textarea>
+                    <br/>
+                    <button type="button" onclick='collapseLevel()'>Execute</button>
+                </div>
+                <div class="text-center col-md-6">
+                    <h4>Collapse DAG tree</h4>
+                    <textarea rows="4" cols="30" disabled>
+    instance.collapse(1, [0]); // to collpase [0] sibling nodes in level 1
+                        </textarea>
+                    <br/>
+                    <button type="button" onclick='collapseLevelwithSibling()'>Execute</button>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="text-center col-md-6">
+                    <h4>Expand DAG tree</h4>
+                    <textarea rows="4" cols="30" disabled>
+    instance.expand(1); // to expand all nodes in level 1
+                        </textarea>
+                    <br/>
+                    <button type="button" onclick='expandLevel()'>Execute</button>
+                </div>
+                <div class="text-center col-md-6">
+                    <h4>Expand DAG tree</h4>
+                    <textarea rows="4" cols="30" disabled>
+        instance.expand(1, [0]); // to expand [0] sibling nodes in level 1
+                            </textarea>
+                    <br/>
+                    <button type="button" onclick='ExpandLevelwithSibling()'>Execute</button>
+                </div>
+            </div>
+        </div>
+        <script src="/dag.js"></script>
+        <script src="main.js"></script>
 </body>
 
 </html>
