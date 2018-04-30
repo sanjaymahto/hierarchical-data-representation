@@ -140,13 +140,19 @@ class DAG {
   }
   /**
    * @description function to assign names to each paths.
+   * @param  {} pathName - Argument to provide unique names of the path for particular Instance.
    * @param  {} pathKey - identifier for textPath.
    */
-  pathName(pathKey) {
-    this.config.pathKey = pathKey; // Assigning pathkey to the config object.
-    createDag(this.svg, this.root, this.root, this.treemap, this.config);
-    this.collapse(0); // to collapse the tree.
-    this.expand(0); // to expand the tree.
+  pathName(pathName, pathKey) {
+    if (pathName === undefined || pathKey === undefined) {
+      throw new Error('Please pass all the Arguments.');
+    } else {
+      this.config.pathName = pathName; // Assigning pathName to the config object.
+      this.config.pathKey = pathKey; // Assigning pathkey to the config object.
+      createDag(this.svg, this.root, this.root, this.treemap, this.config);
+      this.collapse(0); // to collapse the tree.
+      this.expand(0); // to expand the tree.
+    }
   }
   /**
    * @description function to add event listeners to the node in tree.

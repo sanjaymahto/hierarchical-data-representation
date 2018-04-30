@@ -8,7 +8,7 @@ const elemConfig = {
   width: 960,
   height: 500,
   nodeSize: 30,
-  nodeConfig: { parentColor: '#F7C7C5', childColor: '#FFE2C5', rootColor: '#FBC7E2' },
+  nodeConfig: { leafColor: '#FFE2C5', rootColor: '#FBC7E2' },
   children: 'children',
   foldable: false,
   nameFunc(d) {

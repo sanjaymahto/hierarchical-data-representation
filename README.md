@@ -180,13 +180,27 @@ currentNode.data.nodeid
 
 ### Using pathName API
 
-The [pathName](https://github.com/sanjaymahto/hierarchical-data-representation/blob/origin/feature/refactoring-code/src/dag-renderer.js) API allows you to Name the paths of DAG tree. This will allow you to change the path names of the Nodes dynamically. You have to pass path identifier key from JSON Data as a parameter.
+The [pathName](https://github.com/sanjaymahto/hierarchical-data-representation/blob/origin/feature/refactoring-code/src/dag-renderer.js) API allows you to Name the paths of DAG tree. This will allow you to change the path names of the Nodes dynamically. You have to pass path name and path identifier key from JSON Data as a parameter.
 
+`API`
+            
+    /* pathName should be string type, To provide unique names 
+      of the path for particular Instance.*/
+
+    /* pathkey should be string type i.e identifier key from the 
+      JSON tree data provided.*/
+    
+    pathName(pathName, pathKey);
+    
 `Example:`
 
-    /* argument of pathName should be string type i.e identifier key from the JSON tree data provided.*/
-    
-    instance.pathName('textPath'); /* textPath is identifier here from the JSON tree data provided.*/
+    instance.pathName('instance1','textPath'); 
+      /* textPath is identifier here from the JSON tree data 
+         provided.*/
+     /*instance1 is the unique name for the paths, for a 
+       particular Instance.*/
+
+>Note: pathName should be unique for different instances.
 
 ### Using on API
 

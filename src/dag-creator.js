@@ -72,10 +72,7 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
       if (d.parent === undefined || d.parent === null) {
         return config.nodeConfig.rootColor;
       }
-      if ((d._children === undefined || d._children === null) && (d.children === undefined || d.children === null)) {
-        return config.nodeConfig.childColor;
-      }
-      return config.nodeConfig.parentColor;
+      return config.nodeConfig.leafColor;
     });
 
   // condition to add click event listener to the node if foldable is true.
@@ -105,6 +102,7 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
 
   // update labels of the nodes
   nodeUpdate.selectAll('text').remove();
+
   nodeUpdate.append('text')
     .attr('dy', '.35em')
     .attr('x', d => (d.children || d._children ? -0 : 0))
@@ -125,10 +123,7 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
       if (d.parent === undefined || d.parent === null || d.parent === 'null') {
         return config.nodeConfig.rootColor;
       }
-      if ((d._children === undefined) && (d.children === undefined)) {
-        return config.nodeConfig.childColor;
-      }
-      return config.nodeConfig.parentColor;
+      return config.nodeConfig.leafColor;
     })
     .attr('cursor', 'pointer');
 
@@ -142,9 +137,9 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
   const link = rendersvg.selectAll('path.link')
     .data(links, d => d.id);
 
-    // Enter any new links at the parent's previous position.
+  // Enter any new links at the parent's previous position.
   const linkEnter = link.enter().insert('path', 'g')
-    .attr('id', d => `${d.data.name}${d.id}`)
+    .attr('id', d => `${config.pathName}${d.id}`)
     .attr('class', 'link')
     .attr('d', () => {
       let o = { x: source.x0, y: source.y0 };
@@ -155,7 +150,8 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
       return path;
     });
 
-    // UPDATE
+
+  // UPDATE
   const linkUpdate = linkEnter.merge(link);
 
   // Transition back to the parent element position
@@ -174,7 +170,7 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
   let linketextEnter = linktext.enter().append('g')
     .attr('class', 'link');
 
-    // Add arc text for the nodes
+  // Add arc text for the nodes
   linketextEnter.append('text')
     .attr('dy', '-.25em')
     .style('text-anchor', 'middle') // place the text halfway on the arc
@@ -208,7 +204,7 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
     .append('textPath')
     .attr('class', 'textpath')
     .attr('startOffset', '50%')
-    .attr('xlink:href', d => `${d.data.name}${d.id}`)
+    .attr('xlink:href', d => `${config.pathName}${d.id}`)
     .text((d) => {
       let arcLength = Math.sqrt((((d.x - d.parent.x) ** 2) + ((d.y - d.parent.y) ** 2)));
       let str;
@@ -236,7 +232,7 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
   linkTextUpdate.selectAll('textPath')
     .attr('class', 'textpath')
     .attr('startOffset', '50%')
-    .attr('xlink:href', d => `#${d.data.name}${d.id}`)
+    .attr('xlink:href', d => `#${config.pathName}${d.id}`)
     .text((d) => {
       let arcLength = Math.sqrt((((d.x - d.parent.x) ** 2) + ((d.y - d.parent.y) ** 2)));
       let str;

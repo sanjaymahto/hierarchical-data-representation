@@ -23,7 +23,7 @@ let collapseExpand = (() => {
     return d;
   };
   /**
-* @description function to collapse the tree based on siblingArray.
+ * @description function to collapse the tree based on siblingArray.
  * @param  {} d //tree data or node data
  * @param  {} level // depth level of tree
  * @param  {} siblingArray // array of names of child of that levels parent to  collapse
