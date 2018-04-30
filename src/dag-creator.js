@@ -1,13 +1,14 @@
 import * as d3 from 'd3';
 /**
  * @description Creates a curved (diagonal) path from parent to the child nodes
- * @param  {} s
- * @param  {} d
+ * @param  {} s - source points for the path.
+ * @param  {} d - Destination points for the path.
  */
 function diagonal(s, d) {
   let middleIndex = s.parent.children.length / 2; // Find the middle index
   let index = s.parent.children.indexOf(s); // Find index of the current node
-  // If the node is a right node, rotate it
+
+  // If the node is a right node, change the direction of path.
   if (index >= middleIndex) {
     const path = `M ${d.x} ${d.y}
   C ${(s.x + d.x) / 2} ${d.y},
@@ -23,10 +24,11 @@ function diagonal(s, d) {
 }
 /**
  * @description function to update the tree nodes.
- * @param  {} rendersvg // Svg tag
- * @param  {} rootElement // tree data or node Data
- * @param  {} renderTreemap // tree layout based on tree data or node data
- * @param  {} nodeSize // node size
+ * @param  {} rendersvg - Svg tag
+ * @param  {} rootElement - tree data or node Data
+ * @param  {} renderTreemap - tree layout based on tree data or node data
+ * @param  {} nodeSize - node size
+ * @param {} config - tree configuration object
  */
 export default function createDag(rendersvg, root, rootElement, renderTreemap, config) {
   let i = 0;
@@ -41,12 +43,14 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
 
   // Assigns the x and y position for the nodes
   treeData = renderTreemap(root);
+
   // Compute the new tree layout.
   const nodes = treeData.descendants();
   const links = treeData.descendants().slice(1);
 
   // Normalize for fixed-depth.
   nodes.forEach((d) => { d.y = d.depth * 135; });
+
   // ****************** Nodes section *************************** //
   // Update the nodes...
   const node = rendersvg.selectAll('g.node')
@@ -57,21 +61,7 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
     .attr('class', 'node')
     .attr('transform', () => `translate(${source.x0},${source.y0})`);
 
-  // Add Circle for the nodes and making it clickable or non-clickable.
-  nodeEnter.append('circle')
-    .attr('class', 'node')
-    .attr('r', config.nodeSize)
-    .style('fill', (d) => {
-      if (d.parent === undefined || d.parent === null) {
-        return config.nodeConfig.rootColor;
-      }
-      if ((d._children === undefined || d._children === null) && (d.children === undefined || d.children === null)) {
-        return config.nodeConfig.childColor;
-      }
-      return config.nodeConfig.parentColor;
-    });
-
-  // UPDATE
+  // UPDATE THE NODE
   const nodeUpdate = nodeEnter.merge(node);
 
   // Add Circle for the nodes and making it clickable or non-clickable on Updation of node.
@@ -106,13 +96,12 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
     });
   }
 
-  // if consition for custom events in the nodes.
+  // if condition for custom events in the nodes.
   if (config.eventFunc.length !== 0) {
     config.eventFunc.forEach((event) => {
       nodeUpdate.on(event.eventName, event.eventFunc);
     });
   }
-
 
   // update labels of the nodes
   nodeUpdate.selectAll('text').remove();
@@ -147,7 +136,7 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
   node.exit()
     .remove();
 
-  // ****************** links section ***************************
+  // ****************** links section *************************** //
 
   // Update the links...
   const link = rendersvg.selectAll('path.link')

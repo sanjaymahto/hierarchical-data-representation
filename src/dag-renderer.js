@@ -9,11 +9,14 @@ import collapseExpand from './collapse-expand-tree';
 class DAG {
   /**
    * @description constructor defined for Graph class.
+   * @param  {} mount - Mounting Element for DAG graph i.e div, span, id etc.
+   * @param  {} data - To assign config to the nodes and DAG.
+   * @param  {} config - To add the adg Data.
    */
   constructor(mount, data, config) {
     this.divElement = mount;
-    this.config = Object.assign({}, elemConfig, config); // To assign config to the nodes and DAG.
-    this.adgData = data; // To add the adg Data.
+    this.config = Object.assign({}, elemConfig, config);
+    this.adgData = data;
   }
   /**
    * @description Function to render the tree
@@ -27,26 +30,28 @@ class DAG {
       .attr('transform', `translate(${this.config.margin.left},${this.config.margin.top})`);
     const rendersvg = this.svg;
 
-    // Assigns parent, children, height, depth
+    // Assigns parent, children, height, depth to the Tree.
     this.root = d3.hierarchy(this.adgData, d => d[this.config.children]);
     this.root.y0 = this.config.height / 2;
     this.root.x0 = 0;
     const rootElement = this.root;
 
-    // declares a tree layout and assigns the size
+    // declaring the tree layout and assigning the size to the Tree.
     this.treemap = d3.tree()
       .nodeSize([40, 30])
       .separation((a, b) => (a.parent === b.parent ? 3 : 3));
     const renderTreemap = this.treemap;
 
+    // Assigning the nodesize and mount element to the config file.
     this.config.nodeSize = this.config.nodeSize;
     this.config.mount = this.divElement;
+
     // to update the node
     createDag(rendersvg, this.root, rootElement, renderTreemap, this.config);
   }
   /**
    *@description function to  update the data and recreating the tree.
-   * @param  {} newData
+   * @param  {} newData - Updated nested JSON tree data to update the DAG graph.
    */
   updateData(newData) {
     this.adgData = newData;
@@ -55,8 +60,7 @@ class DAG {
     this.root.y0 = this.config.height / 2;
     this.root.x0 = 0;
     const rootElement = this.root;
-    this.config.nodeSize = this.config.nodeSize;
-    this.config.mount = this.divElement;
+
     // to update the node.
     createDag(this.svg, this.root, rootElement, this.treemap, this.config);
     this.collapse(0); // to collapse the tree.
@@ -64,13 +68,13 @@ class DAG {
   }
   /**
    * @description function to collapse the tree node.
-   * @param  {} level
-   * @param  {} siblingArray
+   * @param  {} level - depth level of tree.
+   * @param  {} siblingArray - sibiling array of the level to collapse.
    */
   collapse(level, siblingArray) {
     const { svg, treemap } = this;
     let cd;
-    if (siblingArray === undefined || siblingArray === null || siblingArray === '') {
+    if (siblingArray === undefined) {
       if (level === 0) {
         cd = collapseExpand.collapseLevel(this.root, level);
         createDag(svg, this.root, cd, treemap, this.config);
@@ -94,14 +98,14 @@ class DAG {
   }
   /**
    * @description function to expand the tree node.
-   * @param  {} level
-   * @param  {} siblingArray
-   * @param  {} iscollapsed=false
+   * @param  {} level - depth level of tree.
+   * @param  {} siblingArray - sibiling array of the tree to expand.
+   * @param  {} iscollapsed=false - if true tree will expand till one level further otherwise it will expand full.
    */
   expand(level, siblingArray, iscollapsed = false) {
     const { svg, treemap } = this;
     let ed;
-    if (siblingArray === undefined || siblingArray === null || siblingArray === '') {
+    if (siblingArray === undefined) {
       if (level === 0) {
         ed = collapseExpand.expandLevel(this.root, level);
         createDag(svg, this.root, ed, treemap, this.config);
@@ -125,10 +129,10 @@ class DAG {
   }
   /**
    * @description function to assign name to each node.
-   * @param  {} nameFunc //Function as an argument.
+   * @param  {} nameFunc - Function as an argument.
    */
   nodeName(nameFunc) {
-    this.config.nameFunc = nameFunc;
+    this.config.nameFunc = nameFunc; // Assigning name function to the config object.
     const rootElement = this.root;
     createDag(this.svg, this.root, rootElement, this.treemap, this.config);
     this.collapse(0); // to collapse the tree.
@@ -136,18 +140,18 @@ class DAG {
   }
   /**
    * @description function to assign names to each paths.
-   * @param  {} pathKey //identifier for textPath.
+   * @param  {} pathKey - identifier for textPath.
    */
   pathName(pathKey) {
-    this.config.pathKey = pathKey;
+    this.config.pathKey = pathKey; // Assigning pathkey to the config object.
     createDag(this.svg, this.root, this.root, this.treemap, this.config);
     this.collapse(0); // to collapse the tree.
     this.expand(0); // to expand the tree.
   }
   /**
    * @description function to add event listeners to the node in tree.
-   * @param  {} event // event Name
-   * @param  {} func // event Fucntion
+   * @param  {} event - event Name
+   * @param  {} func - event Function
    */
   on(event, func) {
     let tempEvent = {
@@ -161,7 +165,7 @@ class DAG {
   }
   /**
    * @description function to remove event listeners from nodes.
-   * @param  {} eventArray //Array of event Names
+   * @param  {} eventArray - Array of event Names.
    */
   removeEvent(eventArray) {
     if (eventArray) {
