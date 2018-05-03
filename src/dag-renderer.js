@@ -36,8 +36,13 @@ class DAG {
     this.root.x0 = 0;
     const rootElement = this.root;
 
+    // size of the diagram
+    let viewerWidth = window.innerWidth;
+    let viewerHeight = window.innerHeight;
+
     // declaring the tree layout and assigning the size to the Tree.
     this.treemap = d3.tree()
+      .size([viewerHeight, viewerWidth])
       .nodeSize([40, 30])
       .separation((a, b) => (a.parent === b.parent ? 3 : 3));
     const renderTreemap = this.treemap;

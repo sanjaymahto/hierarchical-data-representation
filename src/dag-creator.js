@@ -35,11 +35,15 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
   let treeData;
   const duration = 500;
   const source = rootElement;
+  // panning variables
+  let panSpeed = 200;
+  let panBoundary = 20; // Within 20px from edges will pan when dragging.
 
   // Creating Div element for tooltip
   let div = d3.select(config.mount).append('div')
-    .attr('class', 'tooltip')
+    .attr('class', 'dagTooltip')
     .style('display', 'none');
+
 
   // Assigns the x and y position for the nodes
   treeData = renderTreemap(root);

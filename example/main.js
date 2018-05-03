@@ -94,15 +94,15 @@ let instance = dagFn({
     }
   ]
 }, {
-  margin: {
-    top: 50,
-    right: 90,
-    bottom: 30,
-    left: 700,
-  },
-  width: 960,
-  height: 400,
-  nodeSize: 30,
+    margin: {
+      top: 50,
+      right: 90,
+      bottom: 30,
+      left: 700,
+    },
+    width: 960,
+    height: 400,
+    nodeSize: 30,
     children: 'lanes',
     foldable: true
   });                       //Creating an instance.
@@ -110,13 +110,13 @@ let instance = dagFn({
 instance.render();          // calling render method to render the DAG graph.
 
 //Function to reset the DAG graph
-function reset(){
+function reset() {
   location.reload();
 }
 
 //Function to add names to the node.
 function addName() {
-  instance.nodeName((d) =>{
+  instance.nodeName((d) => {
     return d.data.nodeid;
   });
 };
@@ -127,7 +127,7 @@ function addpathName() {
 };
 
 //function to Update the Data.
-function updateData(){
+function updateData() {
   instance.updateData({
     "host": null,
     "cut": "v",
@@ -174,7 +174,7 @@ function updateData(){
             "nodeid": 5,
             "lanes": []
           },
-      {
+          {
             "host": {
               "seed": 10,
               "dimensions": {
@@ -218,10 +218,10 @@ function updateData(){
       }
     ]
   });
-} 
+}
 
 //Function to add event to nodes.
-function addEvent(){
+function addEvent() {
   instance.on('click', (d) => {
     alert(d.data.nodeid);
   })
@@ -232,35 +232,35 @@ function addEvent(){
 };
 
 //Function to remove all events to nodes.
-function removeAllEvents(){
+function removeAllEvents() {
   instance.removeEvent();
 };
 
 //Function to remove event to nodes.
-function removeEvents(){
+function removeEvents() {
   instance.removeEvent(['click', 'mouseover']);
 };
 
 //Function to collapse DAG tree according to levels.
-function collapseLevel(){
+function collapseLevel() {
   instance.expand(0);
   instance.collapse(1);
 };
 
 //Function to collapse DAG tree according to levels and sibling nodes.
-function collapseLevelwithSibling(){
+function collapseLevelwithSibling() {
   instance.expand(0);
   instance.collapse(1, [0]);
 }
 
 //Function to expand DAG tree according to levels.
-function expandLevel(){
+function expandLevel() {
   instance.collapse(1);
   instance.expand(1);
 };
 
 //Function to expand DAG tree according to levels and sibling nodes.
-function ExpandLevelwithSibling(){
+function ExpandLevelwithSibling() {
   instance.collapse(1);
   instance.expand(1, [0]);
 }
