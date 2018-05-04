@@ -50,6 +50,8 @@ For development from the github repository, run `build` command to generate the 
 The [dag](https://github.com/sanjaymahto/hierarchical-data-representation/blob/origin/feature/refactoring-code/src/dag.js) module allows you to mount SVG element to any HTML element provided. dag is a function which accepts one parameter `mount` which can be any HTML Element like div, span, id etc.
 It returns a function to load Nested Tree JSON data with configuration object as parameters to create an Instance of DAG graph.
 
+By default, DAG will take default positions for nodes to create a tree. But, if you want to give custom positions to the Nodes, then it can be done by passing (x,y) positions of each node as(px, py) in Nested JSON structure (see Example below). 
+
 `Example:`
 
 `Create a mount point for DAG (Directed Acyclic Graph)`
@@ -58,7 +60,7 @@ It returns a function to load Nested Tree JSON data with configuration object as
                const dagFn = dag('#chart'); 
  `Pass Nested Tree JSON data and configuration Object to returned function to create an Instance of DAG`     
 
-    // sample input data
+` sample input data with Default Node Positions.`
     
     let data = {  
     "nodeid":"1",
@@ -90,9 +92,54 @@ It returns a function to load Nested Tree JSON data with configuration object as
          "children":[]
       }
     ]};
+                       
 
-    // config object of the dag
-    let config ={  
+ `sample input data with Custom Node Positions.`
+          
+    let data = {  
+    "nodeid":"1",
+    "nodename":"India",
+    "extarinfo":{},
+    "px":20,     // px stands for parametrized x position.
+    "py": 20,    //py stands for parametrized y position.
+    "children":[  
+      {  
+         "nodeid":"2",
+         "nodename":"East",
+         "extarinfo":{},
+         "px":120,
+         "py": 220,
+         "children":[]
+      },
+      {  
+         "nodeid":"3",
+         "nodename":"West",
+         "extarinfo":{},
+          "px":220,
+         "py": 320,
+         "children":[]
+      },
+      {  
+         "nodeid":"4",
+         "nodename":"North",
+         "extarinfo":{},
+          "px":320,
+         "py": 420,
+         "children":[]
+      },
+      {  
+         "nodeid":"5",
+         "nodename":"South",
+         "extarinfo":{},
+         "px":420,
+         "py": 520,
+         "children":[]
+      }
+    ]};
+
+`config object of the dag`
+ 
+     let config ={  
       margin:{    /*margin of the DAG graph*/
         top:50,
         right:90,
@@ -110,6 +157,7 @@ It returns a function to load Nested Tree JSON data with configuration object as
      children:'children',//mandatory field to identify child. default is `children`
      foldable:false, //It should be boolean (true/false).
     };
+
 `Creating an Instance of DAG`    
     
     const instance = dagFn( data, config); //This function will return object.

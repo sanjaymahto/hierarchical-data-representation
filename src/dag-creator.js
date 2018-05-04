@@ -5,22 +5,49 @@ import * as d3 from 'd3';
  * @param  {} d - Destination points for the path.
  */
 function diagonal(s, d) {
-  let middleIndex = s.parent.children.length / 2; // Find the middle index
-  let index = s.parent.children.indexOf(s); // Find index of the current node
-
-  // If the node is a right node, change the direction of path.
-  if (index >= middleIndex) {
-    const path = `M ${d.x} ${d.y}
+  // Chaecking if user has provided custom positions for Nodes or not.
+  if ((s.data.px === undefined || s.data.py === undefined) && (d.data.px === undefined || d.data.py === undefined)) {
+    let middleIndex = s.parent.children.length / 2; // Find the middle index
+    let index = s.parent.children.indexOf(s); // Find index of the current node
+    // If the node is a right node, change the direction of path.
+    if (index >= middleIndex) {
+      const path = `M ${d.x} ${d.y}
   C ${(s.x + d.x) / 2} ${d.y},
     ${(s.x + d.x) / 2} ${s.y},
     ${s.x} ${s.y}`;
-    return path;
-  }
-  const path = `M ${s.x} ${s.y}
+      return path;
+    }
+    const path = `M ${s.x} ${s.y}
   C ${(s.x + d.x) / 2} ${s.y},
     ${(s.x + d.x) / 2} ${d.y},
     ${d.x} ${d.y}`;
+    return path;
+  }
+  let middleIndex = s.parent.children.length / 2; // Find the middle index
+  let index = s.parent.children.indexOf(s); // Find index of the current node
+  // If the node is a right node, change the direction of path.
+  if (index >= middleIndex) {
+    const path = `M ${d.data.px} ${d.data.py}
+  L ${s.data.px} ${s.data.py}`;
+    return path;
+  }
+  const path = `M ${s.data.px} ${s.data.py}
+  L ${d.data.px} ${d.data.py}`;
   return path;
+}
+/**
+ * @description Function to delete the Node from DAG.
+ * @param  {} d - node element to be deleted.
+ */
+function removeItem(d) {
+  if (d.parent === null) {
+    return null;
+  }
+  d.parent.children.splice(d.parent.children.indexOf(d), 1);
+  if (d.parent.children.length === 0) {
+    d.parent.children = null;
+  }
+  return d.parent;
 }
 /**
  * @description function to update the tree nodes.
@@ -38,6 +65,9 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
   // panning variables
   let panSpeed = 200;
   let panBoundary = 20; // Within 20px from edges will pan when dragging.
+  // variables for drag/drop
+  let selectedNode = null;
+  let draggingNode = null;
 
   // Creating Div element for tooltip
   let div = d3.select(config.mount).append('div')
@@ -63,7 +93,13 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
   // Enter any new nodes at the parent's previous position.
   const nodeEnter = node.enter().append('g')
     .attr('class', 'node')
-    .attr('transform', () => `translate(${source.x0},${source.y0})`);
+    // .attr('transform', () => `translate(${source.x0},${source.y0})`);
+    .attr('transform', (d) => {
+      if ((d.data.px === null || d.data.px === undefined) && (d.data.py === null || d.data.py === undefined)) {
+        return `translate(${source.x0},${source.y0})`;
+      }
+      return `translate(${source.data.px},${source.data.py})`;
+    });
 
   // UPDATE THE NODE
   const nodeUpdate = nodeEnter.merge(node);
@@ -78,6 +114,40 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
       }
       return config.nodeConfig.leafColor;
     });
+
+
+  /** **************************Logic to delete the node with updated data in DAG*********************** */
+  let close = nodeUpdate.append('g')
+    .attr('class', 'remove-icon-group')
+    .on('click', function (d) {
+      let modifiedRoot = removeItem(d);
+      if (modifiedRoot === null) {
+        createDag(rendersvg, root, root, renderTreemap, config);
+      } else {
+        createDag(rendersvg, root, modifiedRoot, renderTreemap, config);
+      }
+    });
+
+  close.append('circle')
+    .attr('class', 'remove-icon')
+    .attr('r', 8);
+
+  close.append('line')
+    .attr('x1', -4)
+    .attr('x2', 4)
+    .attr('y1', -4)
+    .attr('y2', 4)
+    .attr('stroke', '#a0a0a0')
+    .attr('stroke-width', 1);
+
+  close.append('line')
+    .attr('x1', 4)
+    .attr('x2', -4)
+    .attr('y1', -4)
+    .attr('y2', 4)
+    .attr('stroke', '#a0a0a0')
+    .attr('stroke-width', 1);
+
 
   // condition to add click event listener to the node if foldable is true.
   if (config.foldable) {
@@ -118,7 +188,12 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
   // Transition to the proper position for the node
   nodeUpdate.transition()
     .duration(duration)
-    .attr('transform', d => `translate(${d.x},${d.y})`);
+    .attr('transform', (d) => {
+      if ((d.data.px === null || d.data.px === undefined) && (d.data.py === null || d.data.py === undefined)) {
+        return `translate(${d.x},${d.y})`;
+      }
+      return `translate(${d.data.px},${d.data.py})`;
+    });
 
   // Update the node attributes and style
   nodeUpdate.select('circle.node')
@@ -145,15 +220,28 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
   const linkEnter = link.enter().insert('path', 'g')
     .attr('id', d => `${config.pathName}${d.id}`)
     .attr('class', 'link')
-    .attr('d', () => {
-      let o = { x: source.x0, y: source.y0 };
-      const path = `M ${o.x} ${o.y}
+    // .attr('d', () => {
+    //   let o = { x: source.x0, y: source.y0 };
+    //   const path = `M ${o.x} ${o.y}
+    //   C ${(o.x + o.x) / 2} ${o.y},
+    //     ${(o.x + o.x) / 2} ${o.y},
+    //     ${o.x} ${o.y}`;
+    //   return path;
+    // });
+    .attr('d', (d) => {
+      if ((d.data.px === null || d.data.px === undefined) && (d.data.py === null || d.data.py === undefined)) {
+        let o = { x: source.x0, y: source.y0 };
+        const path = `M ${o.x} ${o.y}
       C ${(o.x + o.x) / 2} ${o.y},
         ${(o.x + o.x) / 2} ${o.y},
         ${o.x} ${o.y}`;
+        return path;
+      }
+      let o = { x: source.data.px, y: source.data.py };
+      const path = `M ${o.x} ${o.y}
+      L ${o.x} ${o.y}`;
       return path;
     });
-
 
   // UPDATE
   const linkUpdate = linkEnter.merge(link);

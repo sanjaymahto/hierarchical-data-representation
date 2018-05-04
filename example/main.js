@@ -10,6 +10,8 @@ let instance = dagFn({
   "ratioWeight": 1,
   "nodeid": 1,
   "pathText": "This is root Node.",
+  "px": -150,
+  "py": 350,
   "lanes": [
     {
       "host": null,
@@ -18,6 +20,8 @@ let instance = dagFn({
       "nodeid": 2,
       "preferred": true,
       "pathText": "This is first Node.",
+      "px": 100,
+      "py": 120,
       "lanes": [
         {
           "host": {
@@ -33,14 +37,16 @@ let instance = dagFn({
           "pathText": "This is third Node.",
           "nodeid": 4,
           "preferred": true,
+          "px": 170,
+          "py": 200,
           "lanes": []
         },
         {
           "host": {
             "seed": 10,
             "dimensions": {
-              "width": 300,
-              "height": 300
+              "width": -200,
+              "height": 320
             },
             "position": null
           },
@@ -48,6 +54,8 @@ let instance = dagFn({
           "ratioWeight": 1,
           "pathText": "This is fourth Node.",
           "nodeid": 5,
+          "px": -20,
+          "py": 350,
           "lanes": []
         }
       ]
@@ -58,6 +66,8 @@ let instance = dagFn({
       "ratioWeight": 1,
       "nodeid": 3,
       "pathText": "This is second Node.",
+      "px": -50,
+      "py": 120,
       "lanes": [
         {
           "host": {
@@ -72,6 +82,8 @@ let instance = dagFn({
           "ratioWeight": 1,
           "pathText": "This is fifth Node.",
           "nodeid": 6,
+          "px": -200,
+          "py": 200,
           "lanes": []
         },
         {
@@ -88,6 +100,8 @@ let instance = dagFn({
           "pathText": "This is sixth Node.",
           "nodeid": 7,
           "preferred": true,
+          "px": -270,
+          "py": 350,
           "lanes": []
         }
       ]
