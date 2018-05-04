@@ -5,11 +5,12 @@ import * as d3 from 'd3';
  * @param  {} d - Destination points for the path.
  */
 function diagonal(s, d) {
-  // Chaecking if user has provided custom positions for Nodes or not.
+  // Chaecking if user has provided custom positions for Nodes or not. If provided it will enter else otherwise if.
   if ((s.data.px === undefined || s.data.py === undefined) && (d.data.px === undefined || d.data.py === undefined)) {
     let middleIndex = s.parent.children.length / 2; // Find the middle index
     let index = s.parent.children.indexOf(s); // Find index of the current node
     // If the node is a right node, change the direction of path.
+
     if (index >= middleIndex) {
       const path = `M ${d.x} ${d.y}
   C ${(s.x + d.x) / 2} ${d.y},
@@ -23,6 +24,7 @@ function diagonal(s, d) {
     ${d.x} ${d.y}`;
     return path;
   }
+
   let middleIndex = s.parent.children.length / 2; // Find the middle index
   let index = s.parent.children.indexOf(s); // Find index of the current node
   // If the node is a right node, change the direction of path.
@@ -62,12 +64,6 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
   let treeData;
   const duration = 500;
   const source = rootElement;
-  // panning variables
-  let panSpeed = 200;
-  let panBoundary = 20; // Within 20px from edges will pan when dragging.
-  // variables for drag/drop
-  let selectedNode = null;
-  let draggingNode = null;
 
   // Creating Div element for tooltip
   let div = d3.select(config.mount).append('div')
@@ -130,7 +126,8 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
 
   close.append('circle')
     .attr('class', 'remove-icon')
-    .attr('r', 8);
+    .attr('r', 8)
+    .attr('transform', d => `translate(${config.nodeSize},${-(config.nodeSize)})`);
 
   close.append('line')
     .attr('x1', -4)
@@ -138,7 +135,8 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
     .attr('y1', -4)
     .attr('y2', 4)
     .attr('stroke', '#a0a0a0')
-    .attr('stroke-width', 1);
+    .attr('stroke-width', 1)
+    .attr('transform', d => `translate(${config.nodeSize},${-(config.nodeSize)})`);
 
   close.append('line')
     .attr('x1', 4)
@@ -146,7 +144,8 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
     .attr('y1', -4)
     .attr('y2', 4)
     .attr('stroke', '#a0a0a0')
-    .attr('stroke-width', 1);
+    .attr('stroke-width', 1)
+    .attr('transform', d => `translate(${config.nodeSize},${-(config.nodeSize)})`);
 
 
   // condition to add click event listener to the node if foldable is true.
