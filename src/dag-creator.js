@@ -70,7 +70,6 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
     .attr('class', 'dagTooltip')
     .style('display', 'none');
 
-
   // Assigns the x and y position for the nodes
   treeData = renderTreemap(root);
 
@@ -110,43 +109,42 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
       }
       return config.nodeConfig.leafColor;
     });
-
-
   /** **************************Logic to delete the node with updated data in DAG*********************** */
-  let close = nodeUpdate.append('g')
-    .attr('class', 'remove-icon-group')
-    .on('click', function (d) {
-      let modifiedRoot = removeItem(d);
-      if (modifiedRoot === null) {
-        createDag(rendersvg, root, root, renderTreemap, config);
-      } else {
-        createDag(rendersvg, root, modifiedRoot, renderTreemap, config);
-      }
-    });
+  // let close = nodeUpdate.append('g')
+  //   .attr('class', 'remove-icon-group')
+  //   .on('click', function (d) {
+  //     let modifiedRoot = removeItem(d);
+  //     if (modifiedRoot === null) {
+  //       createDag(rendersvg, root, root, renderTreemap, config);
+  //     } else {
+  //       createDag(rendersvg, root, modifiedRoot, renderTreemap, config);
+  //     }
+  //   });
 
-  close.append('circle')
-    .attr('class', 'remove-icon')
-    .attr('r', 8)
-    .attr('transform', d => `translate(${config.nodeSize},${-(config.nodeSize)})`);
+  // close.append('circle')
+  //   .attr('class', 'remove-icon')
+  //   .attr('r', 8)
+  //   .attr('transform', d => `translate(${config.nodeSize},${-(config.nodeSize)})`);
 
-  close.append('line')
-    .attr('x1', -4)
-    .attr('x2', 4)
-    .attr('y1', -4)
-    .attr('y2', 4)
-    .attr('stroke', '#a0a0a0')
-    .attr('stroke-width', 1)
-    .attr('transform', d => `translate(${config.nodeSize},${-(config.nodeSize)})`);
+  // close.append('line')
+  //   .attr('x1', -4)
+  //   .attr('x2', 4)
+  //   .attr('y1', -4)
+  //   .attr('y2', 4)
+  //   .attr('stroke', '#a0a0a0')
+  //   .attr('stroke-width', 1)
+  //   .attr('transform', d => `translate(${config.nodeSize},${-(config.nodeSize)})`);
 
-  close.append('line')
-    .attr('x1', 4)
-    .attr('x2', -4)
-    .attr('y1', -4)
-    .attr('y2', 4)
-    .attr('stroke', '#a0a0a0')
-    .attr('stroke-width', 1)
-    .attr('transform', d => `translate(${config.nodeSize},${-(config.nodeSize)})`);
+  // close.append('line')
+  //   .attr('x1', 4)
+  //   .attr('x2', -4)
+  //   .attr('y1', -4)
+  //   .attr('y2', 4)
+  //   .attr('stroke', '#a0a0a0')
+  //   .attr('stroke-width', 1)
+  //   .attr('transform', d => `translate(${config.nodeSize},${-(config.nodeSize)})`);
 
+  /** *********************End of Logic to delete the node with updated data in DAG*********************** */
 
   // condition to add click event listener to the node if foldable is true.
   if (config.foldable) {
