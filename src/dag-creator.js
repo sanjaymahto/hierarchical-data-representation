@@ -60,8 +60,9 @@ function removeItem(d) {
  * @param {} config - tree configuration object
  */
 export default function createDag(rendersvg, root, rootElement, renderTreemap, config) {
+  // remove existing tooltip
+  d3.select('div.dagTooltip').remove();
   let i = 0;
-  let treeData;
   const duration = 500;
   const source = rootElement;
 
@@ -71,7 +72,7 @@ export default function createDag(rendersvg, root, rootElement, renderTreemap, c
     .style('display', 'none');
 
   // Assigns the x and y position for the nodes
-  treeData = renderTreemap(root);
+  let treeData = renderTreemap(root);
 
   // Compute the new tree layout.
   const nodes = treeData.descendants();
