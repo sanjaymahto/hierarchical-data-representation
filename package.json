@@ -26,7 +26,7 @@
     "eslint-plugin-import": "^2.9.0",
     "webpack": "^4.3.0",
     "webpack-cli": "^2.0.13",
-    "webpack-dev-server": "^3.1.1"
+    "webpack-dev-server": "^3.1.11"
   },
   "author": "Sanjay Mahto",
   "license": "ISC"
